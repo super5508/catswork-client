@@ -1,8 +1,9 @@
 import React from 'react'
 
+import Nav from 'components/Nav'
+
 import Heading from 'ui/Heading'
 import Button from 'ui/Button'
-import Nav from 'components/Nav'
 
 import s from './connectLinkedIn.less'
 

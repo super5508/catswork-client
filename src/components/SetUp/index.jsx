@@ -4,9 +4,10 @@ import state from 'state/state'
 
 import User from 'services/User'
 
+import Nav from 'components/Nav'
+
 import Heading from 'ui/Heading'
 import Button from 'ui/Button'
-import Nav from 'components/Nav'
 
 import SetUpForm from './SetUpForm'
 

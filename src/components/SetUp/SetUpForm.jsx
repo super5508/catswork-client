@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import React from 'react'
 import * as yup from 'yup'
 
-import { Month, Industry, DegreeType, Major } from 'models/enums'
+import { EnumMonth, EnumIndustry, EnumDegreeType, EnumMajor } from 'models/enums'
 
 import Loading from 'ui/Loading'
 import Input from 'ui/FormikInput'
@@ -51,7 +51,7 @@ class SetUpForm extends React.Component {
 										block
 										icon='fas fa-industry'
 										placeholder='Desired industry'
-										options={Industry}
+										options={EnumIndustry}
 										component={Select} />
 								</div>
 								<div className={s.halfContainer}>
@@ -61,7 +61,7 @@ class SetUpForm extends React.Component {
 											block
 											icon='fas fa-graduation-cap'
 											placeholder='Graduation month'
-											options={Month}
+											options={EnumMonth}
 											component={Select} />
 									</div>
 									<div className={s.half}>
@@ -78,7 +78,7 @@ class SetUpForm extends React.Component {
 										block
 										icon='fas fa-certificate'
 										placeholder='Degree'
-										options={DegreeType}
+										options={EnumDegreeType}
 										component={Select} />
 								</div>
 								<div className={s.container}>
@@ -87,7 +87,7 @@ class SetUpForm extends React.Component {
 										block
 										icon='fas fa-university'
 										placeholder='Field of study'
-										options={Major}
+										options={EnumMajor}
 										component={Select} />
 								</div>
 							</div>

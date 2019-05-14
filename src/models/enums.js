@@ -1,5 +1,5 @@
 
-const Month = {
+const EnumMonth = {
 	JAN: 'January',
 	FEB: 'February',
 	MAR: 'March',
@@ -14,7 +14,7 @@ const Month = {
 	DEC: 'December'
 }
 
-const Industry = {
+const EnumIndustry = {
 	AGR: 'Agriculture',
 	ART: 'Art',
 	CONS: 'Construction',
@@ -35,7 +35,7 @@ const Industry = {
 	OTHER: 'Other'
 }
 
-const DegreeType = {
+const EnumDegreeType = {
 	ASSOCIATE: 'Associate\'s degree',
 	BACHELOR: 'Bachelor\'s degree',
 	MASTER: 'Master\'s degree',
@@ -44,7 +44,7 @@ const DegreeType = {
 	OTHER: 'Other'
 }
 
-const Major = {
+const EnumMajor = {
 	1: `Accounting`,
 	2: `Actuarial Science`,
 	3: `Advertising`,
@@ -366,4 +366,14 @@ const Major = {
 	319: `Other`
 }
 
-export { Month, Industry, DegreeType, Major }
+const EnumSource = {
+	INFO_SESSION: 'Info session',
+	NETWORKING_SESSION: 'Networking session',
+	COFFEE_CHAT: 'Coffee chat',
+	OFFICE_VISIT: 'Office visit',
+	LINKED_IN: 'LinkedIn',
+	REFERRAL: 'Referral',
+	OTHER: 'Other'
+}
+
+export { EnumMonth, EnumIndustry, EnumDegreeType, EnumMajor, EnumSource }

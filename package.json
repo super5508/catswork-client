@@ -19,6 +19,7 @@
 		"react-router": "^4.3.1",
 		"react-router-dom": "^4.3.1",
 		"react-select": "^2.4.3",
+		"react-table": "^6.10.0",
 		"url-loader": "^1.1.2",
 		"webpack": "^4.29.0",
 		"webpack-cli": "^3.2.1",
@@ -27,6 +28,6 @@
 	"scripts": {
 		"build:dev": "./node_modules/.bin/webpack --config webpack.dev.js --display-error-details --progress --color",
 		"build:prod": "./node_modules/.bin/webpack --config webpack.prod.js --display-error-details --progress --color",
-		"watch": "./node_modules/.bin/webpack --config webpack.config.js --display-error-details --progress --color -w"
+		"watch": "./node_modules/.bin/webpack --config webpack.dev.js --display-error-details --progress --color -w"
 	}
 }

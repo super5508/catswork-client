@@ -24,6 +24,13 @@ const config = {
 				]
 			},
 			{
+				test: /\.css$/,
+				use: [
+					{ loader: MiniCSSExtractPlugin.loader },
+					'css-loader'
+				]
+			},
+			{
 				test: /\.(png|jpg|svg)$/,
 				use: [
 					{
