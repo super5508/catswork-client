@@ -4,9 +4,7 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
 const config = {
 	context: path.resolve('./src'),
-	devtool: 'eval',
 	entry: { app: '.' },
-	mode: 'development',
 	module: {
 		rules: [
 			{
@@ -38,7 +36,6 @@ const config = {
 	},
 	output: {
 		filename: '[name].js',	// [name] resolves to name of bundle (e.g., app)
-		path: path.resolve('./build/public'),
 		publicPath: '/public/'
 	},
 	plugins: [
