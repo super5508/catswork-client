@@ -1,0 +1,117 @@
+@import (reference) '~less/variables.less';
+
+.container {
+	display: inline-block;
+	position: relative;
+
+	&.block {
+		display: block;
+	}
+
+	&.small {
+		.dropdown {
+			top: 1.875em;
+			font-size: 0.8em;
+		}
+	}
+
+	&.active {
+		.button {
+			background-color: mix(@secondary, @white, 20%);
+
+			&.buttonAlt {
+				background-color: mix(@primary, @white, 20%);
+			}
+		}
+
+		.dropdown {
+			display: inline-block;
+		}
+	}
+
+	.button {
+		display: inline-block;
+		color: @dark;
+		padding: 0.625em 1.5em;
+		padding-right: 0.875em;
+		background-color: mix(@secondary, @white, 87.5%);
+		border: none;
+		border-radius: 2em;
+		outline: none;
+		font-size: 0.8em;
+		font-weight: 300;
+		line-height: initial;
+		letter-spacing: 0.125em;
+		text-decoration: none;
+		text-transform: uppercase;
+		cursor: pointer;
+		box-sizing: content-box;
+		transition: background-color 0.375s ease;
+
+		&:hover {
+			background-color: mix(@secondary, @white, 20%);
+		}
+
+		&.buttonBlock {
+			display: block;
+		}
+
+		&.buttonAlt {
+			background-color: mix(@primary, @white, 87.5%);
+
+			&:hover {
+				background-color: mix(@primary, @white, 20%);
+			}
+		}
+
+		&.buttonSmall {
+			padding: 0.25em 0.875em;
+			font-size: 0.7em;
+		}
+
+		.content {
+			display: inline-block;
+		}
+
+		.caret {
+			display: inline-block;
+			font-size: 0.875em;
+			margin-left: 0.5em;
+			margin-bottom: 0.1em;
+		}
+	}
+
+	.dropdown {
+		display: none;
+		position: absolute;
+		top: 2.375em;
+		right: 0;
+		background-color: mix(@secondary, @white, 87.5%);
+		border-radius: 5px;
+		font-size: 0.9em;
+		font-weight: 400;
+		z-index: 10;
+
+		.option {
+			display: block;
+			color: mix(@white, @secondary, 87.5%);
+			padding: 0.25em 0;
+			margin: 0 0.875em;
+			border-bottom: 1px solid mix(@secondary, @dark, 75%);
+			white-space: nowrap;
+			cursor: pointer;
+
+			&:hover {
+				color: @white;
+			}
+
+			&:first-child {
+				padding-top: 0.375em;
+			}
+			&:last-child {
+				padding-bottom: 0.375em;
+				border-bottom: none;
+			}
+		}
+	}
+}

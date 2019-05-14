@@ -1,0 +1,44 @@
+@import (reference) '~less/variables.less';
+
+.setUpForm {
+	.inputs {
+		position: relative;
+
+		.overlay {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: fade(@white, 50%);
+			z-index: 100;
+		}
+
+		.container, .halfContainer {
+			margin-bottom: 0.5em;
+		}
+
+		.halfContainer {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-end;
+
+			.half {
+				flex: 1;
+			}
+		}
+
+		.error {
+			display: inline-block;
+			color: @error;
+			margin-top: 0.5em;
+			margin-left: 0.75em;
+			font-size: 0.875em;
+			opacity: 0.875;
+		}
+	}
+
+	.submitButton {
+		margin-top: 0.75em;
+	}
+}

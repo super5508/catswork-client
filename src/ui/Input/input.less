@@ -1,0 +1,41 @@
+@import (reference) '~less/variables.less';
+
+.container {
+	display: inline-flex;
+	align-items: center;
+	flex-direction: row;
+	border-bottom: 2px solid @light;
+	overflow: hidden;
+
+	&.block {
+		display: flex;
+	}
+
+	&.focused {
+		border-bottom: 2px solid @primary;
+
+		.icon {
+			color: @medium;
+		}
+	}
+
+	.icon {
+		color: lighten(@medium, 10%);
+		width: 1.5em;
+		margin-left: 0.375em;
+		margin-right: 0.125em;
+		font-size: 0.8em;
+		text-align: center;
+	}
+
+	.input {
+		flex: 1;
+		min-width: 0;
+		padding: 0.5em 0.75em;
+		outline: none;
+		border: none;
+		font-family: 'Lato', sans-serif;
+		font-weight: 300;
+		box-sizing: border-box;
+	}
+}

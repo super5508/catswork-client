@@ -1,0 +1,36 @@
+@import (reference) '~less/variables.less';
+
+.nav {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: @white;
+	overflow: hidden;
+	transition: 0.125s linear;
+	z-index: 101;
+
+	&.scrolled {
+		font-size: 0.875em;
+		box-shadow: 0 0 3px fade(@black, 25%);
+	}
+
+	.logo {
+		width: 8.25em;
+		height: 1.5em;
+		margin: 0.875em 1.125em;
+		background-image: url('../../assets/logo-text.png');
+		background-position: center;
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+
+	.buttons {
+		flex: 1;
+		padding-right: 1.125em;
+		text-align: right;
+	}
+}
