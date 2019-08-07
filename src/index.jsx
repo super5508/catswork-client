@@ -6,3 +6,7 @@ import App from 'components/App'
 import 'less/global.less'
 
 ReactDOM.render(<App />, document.querySelector('#root'))
+
+if (module.hot) {
+  module.hot.accept();
+}
