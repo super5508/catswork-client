@@ -22,14 +22,14 @@ class App extends React.Component {
 		else if (state.$user === null) {
 			return <SignedOut />
 		}
-		else if (state.$user.activeStep === ActiveStep.SET_UP) {
+		else if (state.$user === ActiveStep.SET_UP) {
 			return <SetUp />
 		}
-		else if (state.$user.activeStep === ActiveStep.CONNECT_LINKED_IN) {
+		else if (state.$user === ActiveStep.CONNECT_LINKED_IN) {
 			console.log(`linkedin`)
 			return <ConnectLinkedIn />
 		}
-		else if (state.$user.activeStep === ActiveStep.ACTIVE) {
+		else if (state.$user === ActiveStep.ACTIVE) {
 			return <Active />
 		}
 		else {

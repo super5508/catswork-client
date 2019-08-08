@@ -16,7 +16,7 @@ const ConnectLinkedIn = () => (
 			<Heading size={1} primary>Final step</Heading>
 			<Heading size={2}>Connect your LinkedIn account</Heading>
 			<p>yada yada why are we asking this...</p>
-			<Button size='large' href='/linked-in-connect'>Connect account</Button>
+			<Button size='large' href='auth/linkedin/'>Connect account</Button>
 		</section>
 	</>
 )
