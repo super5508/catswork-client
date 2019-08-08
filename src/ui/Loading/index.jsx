@@ -1,21 +1,14 @@
 import React from 'react'
-
 import styles from './loading.less'
 
 class Loading extends React.Component {
-
-	_timeout = undefined
-
-	state = { hidden: true }
-
-	componentDidMount() {
-		this._timeout = setTimeout(() => {
-			this.setState({ hidden: false })
-		}, 500)
+	constructor(props) {
+		super(props)
+		this._timeout = undefined
 	}
 
-	componentWillUnmount() {
-		clearTimeout(this._timeout)
+	state = { 
+		hidden: true 
 	}
 
 	render() {

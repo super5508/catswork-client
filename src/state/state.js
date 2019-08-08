@@ -11,22 +11,21 @@ const ActiveStep = {
 }
 
 class State {
-
 	@observable.ref $user = undefined
-
 	load() {
+		//TODO: Not Optimal way of doing, actual way should be if there isn't token then redirect it to appropriate screen such as sign
 		Status.status().then(action((status) => {
 			this.$user = status.user
-		}))
+		})).catch((err) => {
+			console.error(err)
+			this.$user = null
+		})
 	}
-
 	@action
 	reload() {
 		this.$user = undefined
-
 		this.load()
 	}
-
 }
 
 const state = new State()

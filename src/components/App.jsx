@@ -1,10 +1,7 @@
 import { observer } from 'mobx-react'
 import React from 'react'
-
 import state, { ActiveStep } from 'state/state'
-
 import Loading from 'ui/Loading'
-
 import SignedOut from './SignedOut'
 import SetUp from './SetUp'
 import ConnectLinkedIn from './ConnectLinkedIn'
