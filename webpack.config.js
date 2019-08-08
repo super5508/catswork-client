@@ -49,19 +49,6 @@ const config = {
 		new webpack.NoEmitOnErrorsPlugin(),
 		new MiniCSSExtractPlugin({ filename: '[name].css' })
 	],
-	devServer: {
-		compress: true,
-		historyApiFallback: {
-			index:'/index.html'
-		},
-		proxy: {
-			'/v1/**': {
-				target: 'http://localhost:7777',
-				secure: false,
-				changeOrigin: true
-			}
-		},
-	},
 	resolve: {
 		extensions: ['.js', '.jsx'],
 		modules: [

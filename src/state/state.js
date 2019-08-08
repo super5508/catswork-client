@@ -15,7 +15,8 @@ class State {
 	load() {
 		//TODO: Not Optimal way of doing, actual way should be if there isn't token then redirect it to appropriate screen such as sign
 		Status.status().then(action((status) => {
-			this.$user = status.user
+			console.log(status.data.payload)
+			this.$user = status.data.payload
 		})).catch((err) => {
 			console.error(err)
 			this.$user = null

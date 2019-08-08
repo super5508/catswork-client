@@ -15,6 +15,7 @@ class App extends React.Component {
 	}
 
 	render() {
+		console.log(state.$user)
 		if (state.$user === undefined) {
 			return <Loading />
 		}
@@ -25,6 +26,7 @@ class App extends React.Component {
 			return <SetUp />
 		}
 		else if (state.$user.activeStep === ActiveStep.CONNECT_LINKED_IN) {
+			console.log(`linkedin`)
 			return <ConnectLinkedIn />
 		}
 		else if (state.$user.activeStep === ActiveStep.ACTIVE) {
