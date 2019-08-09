@@ -16,10 +16,9 @@ import 'react-table/react-table.css'
 import s from './active.less'
 
 const PEOPLE_QUERY = gql`
-	query PeopleQuery {
-		people {
+	query userRootQueryType {
+		catWorksDashboard {
 			id
-			linkedInId
 			first
 			last
 			company
@@ -91,7 +90,8 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.people
+				console.log(data)
+				this._$people = data.catWorksDashboard
 			}))
 	}
 

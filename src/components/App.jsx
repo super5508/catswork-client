@@ -26,7 +26,6 @@ class App extends React.Component {
 			return <SetUp />
 		}
 		else if (state.$user === ActiveStep.CONNECT_LINKED_IN) {
-			console.log(`linkedin`)
 			return <ConnectLinkedIn />
 		}
 		else if (state.$user === ActiveStep.ACTIVE) {

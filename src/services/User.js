@@ -1,18 +1,17 @@
 import GraphQL, { gql } from './GraphQL'
 
 const SET_UP = gql`
-	mutation SetUpMutation($input: SetUpInput!) {
-		setUp(input: $input) {
-			ok
+	mutation AddNewPersonalInfo($parameter: userCreationInputType) {
+		AddNewPersonalInfo(parameter: $parameter) {
+			userId
 		}
 	}
 `
 
 class User {
-
-	static setUp(desiredIndustry, graduationMonth, graduationYear, degree, major) {
+	 static setUp (name, desiredIndustry, gradMonth, gradYear, degree, major) {
 		return GraphQL.query(SET_UP, {
-			input: { desiredIndustry, graduationMonth, graduationYear, degree, major }
+			parameter: {name, desiredIndustry, gradMonth: gradMonth, gradYear: gradYear, degree, major }
 		})
 	}
 

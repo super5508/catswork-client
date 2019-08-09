@@ -12,6 +12,7 @@ import Button from 'ui/Button'
 import s from './setUpForm.less'
 
 const INITIAL_VALUES = {
+	name: '',
 	desiredIndustry: '',
 	graduationMonth: '',
 	graduationYear: '',
@@ -19,6 +20,7 @@ const INITIAL_VALUES = {
 	major: ''
 }
 const VALIDATION_SCHEMA = yup.object().shape({
+	name:yup.string().required('Required'),
 	desiredIndustry: yup.string().required('Required'),
 	graduationMonth: yup.string().required('Required'),
 	graduationYear: yup.number().typeError('Invalid').required('Required').integer('Invalid').min(1900, '1900-2030').max(2030, '1900-2030'),
@@ -45,6 +47,14 @@ class SetUpForm extends React.Component {
 							<div className={s.inputs}>
 								{isSubmitting ? <div className={s.overlay} /> : null}
 								{isSubmitting ? <Loading /> : null}
+								<div className={s.container}>
+								<ErrorMessage name='name' render={error => <div className={s.error}>{error}</div>} />
+								<Field name='name'
+									block
+									icon='far fa-user'
+									placeholder='Name'
+									component={Input} />
+								</div>
 								<div className={s.container}>
 									<ErrorMessage name='desiredIndustry' render={error => <div className={s.error}>{error}</div>} />
 									<Field name='desiredIndustry'
@@ -103,7 +113,8 @@ class SetUpForm extends React.Component {
 	}
 
 	_onSubmit = (values) => {
-		this.props.onSetUp(values.desiredIndustry, values.graduationMonth, parseInt(values.graduationYear), values.degree, parseInt(values.major))
+		console.log(`These are values:`, values)
+		this.props.onSetUp(values.name, values.desiredIndustry, values.graduationMonth, parseInt(values.graduationYear), values.degree, parseInt(values.major))
 	}
 
 }
