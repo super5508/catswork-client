@@ -18,7 +18,7 @@ import s from './active.less'
 const PEOPLE_QUERY = gql`
 	query userRootQueryType {
 		catWorksDashboard {
-			id
+			personId
 			first
 			last
 			company
