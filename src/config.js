@@ -1,7 +1,7 @@
 
 const config = {
 	server: {
-		url: 'http://34.67.48.54/',
+		url: 'http://35.209.101.114',
 		graphQLPath: 'graphql'
 	}
 }
