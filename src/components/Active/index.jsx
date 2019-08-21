@@ -2,7 +2,8 @@ import { observable, action } from 'mobx'
 import { observer } from 'mobx-react'
 import React from 'react'
 import ReactTable from 'react-table'
-
+import ReactDOM from 'react-dom';
+import { VictoryPie } from "victory";
 import { EnumIndustry, EnumSource } from 'models/enums'
 
 import GraphQL, { gql } from 'services/GraphQL'
@@ -85,6 +86,11 @@ const COLUMNS = [{
 @observer
 class Active extends React.Component {
 
+	state = {
+		analysis: false, 
+		typeOfChart: 'PIE_CHART'
+	}
+
 	@observable.ref _$people = null
 
 	componentWillMount() {
@@ -95,7 +101,13 @@ class Active extends React.Component {
 			}))
 	}
 
+	toggleAnalysis = () => {
+		this.setState({analysis: !this.state.analysis})
+		console.log(this.state)
+	}
+
 	render() {
+		console.log(`People:`, this._$people, `& State:`, this.state.analysis)
 		let content
 		if (this._$people === null) {
 			content = <Loading />
@@ -103,13 +115,19 @@ class Active extends React.Component {
 		else {
 			content = (
 				<section className={s.active}>
-					<ReactTable className={s.table}
-						data={this._$people}
-						columns={COLUMNS}
-						filterable={true}
-						showPagination={false}
-						minRows={10}
-						noDataText='Nothing here' />
+					{/* Remove Button Created by my  */}
+					<button onClick={this.toggleAnalysis}> Analysis </button>
+					{
+						!this.state.analysis ? (
+						<ReactTable className={s.table}
+							data={this._$people}
+							columns={COLUMNS}
+							filterable={true}
+							showPagination={false}
+							minRows={10}
+							noDataText='Nothing here' />
+						) : null
+					}
 				</section>
 			)
 		}
@@ -117,7 +135,7 @@ class Active extends React.Component {
 		return (
 			<>
 				<Nav>
-					<Button href='/sign-out'>Sign out</Button>
+					<Button href='auth/logout'>Sign out</Button>
 				</Nav>
 				{content}
 			</>
