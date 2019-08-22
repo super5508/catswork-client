@@ -97,7 +97,7 @@ class Active extends React.Component {
 	handleChangeSearchText = (text) => {
 
 		const {data_table,sortingpanel} = this.state;
-		
+		//Change here data_table to this._$people 
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
 		this.setState({
 			searchtext:text
@@ -288,7 +288,7 @@ class Active extends React.Component {
 		const {sortingpanel,data_table} = this.state;
 		let field_value = field
 		var func = this
-		console.log(data_table)
+		//Change here data_table to this._$people 
 		_.each(data_table,(data,i)=>{
 			if(sortingpanel.length > 0){
 				let index = sortingpanel.findIndex(x => x[field_value] === data[field_value]);
@@ -320,12 +320,11 @@ class Active extends React.Component {
 	  }
 
 	  handleFilterValue = (value) => {
-		console.log(value)
+
 		let l = this.state.list
 
 		let index = l.findIndex(x => x.value === value.value);
 
-		console.log(index);
 
 		if(value.selected === true){
 			l[index].selected = false
@@ -366,6 +365,7 @@ class Active extends React.Component {
 		var func = this
 		let l = this.state.list
 		const {sort_field} = this.state;
+		//Change here let list_table = this._$people 
 		let list_table = [
 		{
 		  first:'Harsha',last:'Kumar',company:'LD',industry:'TECH',position:'Developer',email:'harzkr142@gmail.com',phone:'+917060334717',location:'Gurugram',education:'Masters',
@@ -416,6 +416,7 @@ class Active extends React.Component {
 	}
 
 	render() {
+		//Make change in the data part of the react table
 		let content
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
