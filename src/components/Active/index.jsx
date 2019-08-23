@@ -5,17 +5,12 @@ import ReactTable from 'react-table'
 import ReactDOM from 'react-dom';
 import { VictoryPie } from "victory";
 import { EnumIndustry, EnumSource } from 'models/enums'
-
 import GraphQL, { gql } from 'services/GraphQL'
-
 import Nav from 'components/Nav'
-
 import Loading from 'ui/Loading'
 import Button from 'ui/Button'
-
 import 'react-table/react-table.css'
 import s from './active.less'
-
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import FilterList from '@material-ui/icons/FilterList'
@@ -54,13 +49,38 @@ const PEOPLE_QUERY = gql`
 	}
 `
 
+const USER_QUERY = gql`
+query userRootQueryType {
+	catWorksPersonal {
+		userActivity {
+			updatedAt,
+			activity
+		}
+	}
+}
+`
+
 @observer
 class Active extends React.Component {
 
 	constructor(props){
 		super(props);
-		this.state = {searchtext:'',searchpanel:'',modalIsOpen:false,anchorEl:null,list:[],filterText:'',list_sort:[],sorting:false,sorted_list:[],sort_field:'',sortingpanel:[],
-		data_table:[]}
+		this.state = {
+			searchtext:'',
+			searchpanel:'',
+			modalIsOpen:false,
+			anchorEl:null,list:[],
+			filterText:'',
+			list_sort:[],
+			sorting:false,
+			sorted_list:[],
+			sort_field:'',
+			sortingpanel:[],
+			data_table:[],
+			user_activity: [],
+			dataVisulatization: false
+
+		}
 	}
 
 	@observable.ref _$people = null
@@ -71,10 +91,17 @@ class Active extends React.Component {
 				this._$people = data.catWorksDashboard
 				this.setState({data_table: this._$people})
 			}))
+
+			GraphQL.query(USER_QUERY)
+			.then(({ data }) => {
+				console.log(`data From users:`, data)
+				this.setState({user_activity: data.catWorksPersonal.userActivity})
+			})
 	}
 
-	handleChangeSearchText = (text) => {
 
+
+	handleChangeSearchText = (text) => {
 		const {data_table,sortingpanel} = this.state;
 		//Change here data_table to this._$people 
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
@@ -451,6 +478,9 @@ class Active extends React.Component {
 		else {
 			content = (
 				<section className={s.active}>
+					<button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button>
+				{ !this.state.dataVisulatization? (
+				<>
 					<Popover
 						open={open}
 						anchorEl={anchorEl}
@@ -541,7 +571,9 @@ class Active extends React.Component {
 						showPagination={false}
 						minRows={10}
 						noDataText='Nothing here'
-						style={{borderRadius:10,marginTop:15}} />
+						style={{borderRadius:10,marginTop:15}} />)
+				</>)
+					: null}
 				</section>
 			)
 		}
