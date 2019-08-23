@@ -9,10 +9,25 @@
 To make it running in the dev mode, do 
 
 ```
-npm run start
+npm run dev
 ```
 And this will make the project up and running in dev mode 
 
+if you are running in dev environment then make sure you have the frontend pointing to the dev server. To make the frontend point to the dev, 
+
+1. Make sure that in `src/services/status.js` we have `get` axios request pointing to `locahost:8080` 
+ If not already change the url to `http://localhost:8080/api/status` 
+
+2.  Make sure that `src/config.js` points to localhost:8080
+
+```
+const config = {
+	server: {
+		url: 'http://localhost:8080/',
+		graphQLPath: 'graphql'
+	}
+}
+```
 
 ## Understanding frontend 
 Frontend on start, makes an api call to backend endpoint `api/status` this will determine the sate, 
