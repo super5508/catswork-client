@@ -1,7 +1,7 @@
 
 const config = {
 	server: {
-		url: 'http://localhost:8080/',
+		url: 'http://dashboard.catswork.io/',
 		graphQLPath: 'graphql'
 	}
 }

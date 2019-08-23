@@ -3,7 +3,7 @@ import axios from 'axios'
 class Status {
 
 	static status() {
-		return axios.get('http://localhost:8080/api/status', {withCredentials: true})
+		return axios.get('http://dashboard.catswork.io/api/status', {withCredentials: true})
 	}
 
 }
