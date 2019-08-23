@@ -29,6 +29,8 @@ const config = {
 }
 ```
 
+In future we will create environment variables for Chrome extension and React
+
 ## Understanding frontend 
 Frontend on start, makes an api call to backend endpoint `api/status` this will determine the sate, 
 
