@@ -60,28 +60,7 @@ class Active extends React.Component {
 		super(props);
 
 		this.state = {searchtext:'',searchpanel:'',modalIsOpen:false,anchorEl:null,list:[],filterText:'',list_sort:[],sorting:false,sorted_list:[],sort_field:'',sortingpanel:[],
-		data_table:[
-			{
-			first:'Harsha',last:'Kumar',company:'LD',industry:'TECH',position:'Developer',email:'harzkr142@gmail.com',phone:'+917060334717',location:'Gurugram',education:'Masters',
-			hometown:'Asansol',extracurriculars:'Sports, Reading, Debating',website:'',notes:'',source:'OTHER'
-			},
-			{
-				first:'Vincent',last:'Park',company:'Dresden Park',industry:'TECH',position:'Investment Bank',email:'vincentpark@gmail.com',phone:'',location:'US',education:'Masters',
-				hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-			},
-			{
-				first:'Alex',last:'Grimes',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-				hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-			},
-			{
-				first:'Fredrick',last:'Jones',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-				hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-			},
-			{
-				first:'Jonas',last:'Brothers',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-				hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-			}
-		]}
+		data_table:[]}
 	}
 
 	@observable.ref _$people = null
@@ -89,8 +68,8 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				console.log(data)
 				this._$people = data.catWorksDashboard
+				this.setState({data_table: this._$people})
 			}))
 	}
 
@@ -366,28 +345,7 @@ class Active extends React.Component {
 		let l = this.state.list
 		const {sort_field} = this.state;
 		//Change here let list_table = this._$people 
-		let list_table = [
-		{
-		  first:'Harsha',last:'Kumar',company:'LD',industry:'TECH',position:'Developer',email:'harzkr142@gmail.com',phone:'+917060334717',location:'Gurugram',education:'Masters',
-		  hometown:'Asansol',extracurriculars:'Sports, Reading, Debating',website:'',notes:'',source:'OTHER'
-		},
-		{
-			first:'Vincent',last:'Park',company:'Dresden Park',industry:'TECH',position:'Investment Bank',email:'vincentpark@gmail.com',phone:'',location:'US',education:'Masters',
-			hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-		  },
-		{
-			first:'Alex',last:'Grimes',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-			hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-		},
-		{
-			first:'Fredrick',last:'Jones',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-			hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-		},
-		{
-			first:'Jonas',last:'Brothers',company:'North Western',industry:'TECH',position:'Student-Athlete',email:'alexgrimes@gmail.com',phone:'',location:'US',education:'Bachelors',
-			hometown:'New York',extracurriculars:'',website:'',notes:'',source:'LINKED_IN'
-		}
-	] 
+		let list_table = [...this._$people] 
 		let values_to_filter = []
 		_.each(l,(item,i)=>{
 			if(item.selected === false){
