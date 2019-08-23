@@ -41,12 +41,6 @@ const config = {
 			}
 		]
 	},
-	devServer: {
-    proxy: {
-			'/api': 'http://localhost:8080',
-			'/auth': 'http://localhost:8080'
-    }
-  },
 	output: {
 		filename: '[name].js',	// [name] resolves to name of bundle (e.g., app)
 		publicPath: '/public/'
