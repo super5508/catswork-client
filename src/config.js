@@ -1,7 +1,7 @@
 
 const config = {
 	server: {
-		url: 'http://localhost:7777/',
+		url: 'http://localhost:8080/',
 		graphQLPath: 'graphql'
 	}
 }
