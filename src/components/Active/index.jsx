@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import ReactTable from 'react-table'
 import ReactDOM from 'react-dom';
-import { VictoryPie } from "victory";
+import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme } from "victory";
 import { EnumIndustry, EnumSource } from 'models/enums'
 import GraphQL, { gql } from 'services/GraphQL'
 import Nav from 'components/Nav'
@@ -53,6 +53,7 @@ const USER_QUERY = gql`
 query userRootQueryType {
 	catWorksPersonal {
 		userActivity {
+			date,
 			updatedAt,
 			activity
 		}
@@ -99,6 +100,45 @@ class Active extends React.Component {
 			})
 	}
 
+
+	activityTime = (period) => {
+		const getcurrentTimeStamp = Date.now()
+		const peopleActivityList = this.state.user_activity
+		const filteredData = [{x:0, y:0}]
+		const individualDataObj = {}
+		console.log(`This is user Visualization`)
+		if (period === 'day') {
+			console.log(`Day`)
+			const next30DaysTimeStamp = getcurrentTimeStamp + 1000*60*60*24*30
+			console.log(`next30DaysTimeStamp:`, next30DaysTimeStamp)
+			// Check for between now and next 30 days 
+			for (let i=0; i<peopleActivityList.length; i++) {
+				console.log(new Date(), new Date(peopleActivityList[i].date), new Date(next30DaysTimeStamp))
+				if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(next30DaysTimeStamp)) {
+					const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
+					if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
+							individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
+					} else {
+						individualDataObj[convertIntoEnUsaDateFormat] = 1
+					}
+				}
+			}
+
+			// Get Values for next 30 days
+		} else if (period === 'weekly') {
+			// Get Values for 
+		} else if (period === 'monthlu') {
+
+		}
+		console.log(`Individual Data Obj:`, individualDataObj)
+		Object.keys(individualDataObj).forEach(key => {
+			filteredData.push({
+				x:key,
+				y:individualDataObj[key]
+			})
+		})
+		return filteredData
+	}
 
 
 	handleChangeSearchText = (text) => {
@@ -402,7 +442,9 @@ class Active extends React.Component {
 
 	render() {
 		//Make change in the data part of the react table
-		let content
+		const dailyActivityGraph = 	this.activityTime("day")
+		console.log(`dailyActivityGraph:`, dailyActivityGraph)
+		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
 			id: 'name',
@@ -573,7 +615,19 @@ class Active extends React.Component {
 						noDataText='Nothing here'
 						style={{borderRadius:10,marginTop:15}} />)
 				</>)
-					: null}
+					:
+					(<VictoryChart
+  					theme={VictoryTheme.material}
+						>
+					<VictoryLine
+						style={{
+							data: { stroke: "#c43a31" },
+							parent: { border: "1px solid #ccc"}
+						}}
+						data={dailyActivityGraph}
+					/>
+			</VictoryChart>)
+			}
 				</section>
 			)
 		}
