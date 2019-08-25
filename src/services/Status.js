@@ -1,9 +1,10 @@
 import axios from 'axios'
+import config from "./../config"
 
 class Status {
 
 	static status() {
-		return axios.get('http://localhost:8080/api/status', {withCredentials: true})
+		return axios.get(config.server.url + 'api/status', {withCredentials: true})
 	}
 
 }

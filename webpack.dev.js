@@ -1,13 +1,15 @@
 const path = require('path')
+const merge = require('webpack-merge')
+const webpack = require("webpack");
+const baseConfig = require('./webpack.config')
 
-const config = require('./webpack.config')
-
-const devConfig = Object.assign({}, config, {
-	devtool: 'eval',
-	mode: 'development',
-	output: Object.assign({}, config.output, {
-		path: path.resolve('./build/public')
-	})
+module.exports = merge(baseConfig, {
+	plugins: [
+			new webpack.DefinePlugin({
+					'process.env': {
+							'NODE_ENV': JSON.stringify('development')
+					}
+			})
+	]
 })
 
-module.exports = devConfig
