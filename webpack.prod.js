@@ -1,7 +1,7 @@
 const path = require('path')
 const merge = require('webpack-merge')
 const webpack = require("webpack");
-const config = require('./webpack.config')
+const baseConfig = require('./webpack.config')
 
 module.exports = merge(baseConfig, {
 	plugins: [
@@ -11,13 +11,12 @@ module.exports = merge(baseConfig, {
 					}
 			})
 	],
-	watch: true
-	output: Object.assign({}, config.output, {
+	output: Object.assign({}, baseConfig.output, {
 				path: path.resolve('./public')
 			})
 });
 
-module.exports = prodConfig
+
 
 
 // const prodConfig = Object.assign({}, config, {
