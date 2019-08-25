@@ -100,22 +100,39 @@ class Active extends React.Component {
 			})
 	}
 
+	graphRangeCreator = (rangeCalculation) => {
+
+	}
+
+
+	const getFilteredDate = (peopleActivityList, endRange) => {
+		const individualDataObj = {}
+		for (let i=0; i<peopleActivityList.length; i++) {
+			if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
+				const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
+				if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
+						individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
+				} else {
+					individualDataObj[convertIntoEnUsaDateFormat] = 1
+				}
+			}
+		}
+		return individualDataObj
+	}
 
 	activityTime = (period) => {
 		const getcurrentTimeStamp = Date.now()
 		const peopleActivityList = this.state.user_activity
 		const filteredData = [{x:0, y:0}]
-		const individualDataObj = {}
-		console.log(`This is user Visualization`)
+		let individualDataObj = {}
 		if (period === 'day') {
-			console.log(`Day`)
-			const next30DaysTimeStamp = getcurrentTimeStamp + 1000*60*60*24*30
-			console.log(`next30DaysTimeStamp:`, next30DaysTimeStamp)
-			// Check for between now and next 30 days 
+			const individualDataObj = {}
+			const singleDayTimeStamp = 1000*60*60*24
+			const next30DaysTimeStamp = getcurrentTimeStamp + singleDayTimeStamp *30
+		for (let j=0; j<30; j++) {
 			for (let i=0; i<peopleActivityList.length; i++) {
-				console.log(new Date(), new Date(peopleActivityList[i].date), new Date(next30DaysTimeStamp))
-				if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(next30DaysTimeStamp)) {
-					const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
+				if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
+					const convertIntoEnUsaDateFormat = new Date(singleDayTimeStamp).toLocaleDateString("en-US")
 					if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
 							individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
 					} else {
@@ -123,8 +140,8 @@ class Active extends React.Component {
 					}
 				}
 			}
+		}
 
-			// Get Values for next 30 days
 		} else if (period === 'weekly') {
 			// Get Values for 
 		} else if (period === 'monthlu') {
