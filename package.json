@@ -37,7 +37,7 @@
 	"scripts": {
 		"dev": "node_modules/.bin/webpack-dev-server --mode=development  --config webpack.dev.js --open --hot",
 		"build:dev": "webpack --mode=development --config webpack.dev.js --display-error-details --progress --color",
-		"build:prod": "webpack  -p --mode=production --config webpack.prod.js --display-error-details --progress --color"
+		"prod": "webpack  -p --mode=production --config webpack.prod.js --display-error-details --progress --color"
 	
 	}
 }
