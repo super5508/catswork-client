@@ -3,7 +3,6 @@
 ## Setup
 1. Run `npm install`
 2. Run `npm run build`
-3. Use `catswork-server` to server built client files
 
 ## Dev Mode
 To make it running in the dev mode, do 
@@ -13,23 +12,15 @@ npm run dev
 ```
 And this will make the project up and running in dev mode 
 
-if you are running in dev environment then make sure you have the frontend pointing to the dev server. To make the frontend point to the dev, 
-
-1. Make sure that in `src/services/status.js` we have `get` axios request pointing to `locahost:8080` 
- If not already change the url to `http://localhost:8080/api/status` 
-
-2.  Make sure that `src/config.js` points to localhost:8080
+To make production build 
 
 ```
-const config = {
-	server: {
-		url: 'http://localhost:8080/',
-		graphQLPath: 'graphql'
-	}
-}
+npm run prod 
 ```
 
-In future we will create environment variables for Chrome extension and React
+This will make a production build 
+
+<strong> Note: </strong>: Prefer making build on the client and then take a pull from the server 
 
 ## Understanding frontend 
 Frontend on start, makes an api call to backend endpoint `api/status` this will determine the sate, 
