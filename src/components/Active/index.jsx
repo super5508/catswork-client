@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import ReactTable from 'react-table'
 import ReactDOM from 'react-dom';
-import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme } from "victory";
+import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme, VictoryPolarAxis,  VictoryAxis } from "victory";
 import { EnumIndustry, EnumSource } from 'models/enums'
 import GraphQL, { gql } from 'services/GraphQL'
 import Nav from 'components/Nav'
@@ -123,8 +123,8 @@ class Active extends React.Component {
 	activityTime = (period) => {
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
-		const filteredData = [{x:0, y:0}]
 		const individualDataObj = {}
+		const filteredData = []
 		if (period === 'day') {
 			const singleDayTimeStamp = 1000*60*60*24
 			for (let j=0; j<30; j++) {
@@ -135,15 +135,33 @@ class Active extends React.Component {
 				// itterating over all the items in people activity list and checking if it is for current date
 				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) {
 					individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
-					console.log(individualDataObj[formatedGivenTime])
 				}
 			}
 		}
-
 		} else if (period === 'weekly') {
-			// Get Values for 
-		} else if (period === 'monthlu') {
-
+			// Get Values for next 4 weeks
+			for (let j=0; j<4; j++) {
+				individualDataObj['week' + j] = 0
+				const rangeLower = new Date(Date.now() + 1000*60*60*24*7*(j-1)).toLocaleDateString("en-US")
+				const rangeHigher= new Date(Date.now() + 1000*60*60*24*7*j).toLocaleDateString("en-US")
+				for (let i=0; i<peopleActivityList.length; i++) {
+					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
+						individualDataObj['week' + j] = individualDataObj['week' + j] + 1
+					}
+				}
+			}
+		} else if (period === 'monthly') {
+			for (let j=0; j<12; j++) {
+				// Note: Quick Work Around, we are assuming here that every month have 30 days
+				individualDataObj['monthly' + j] = 0
+				const rangeLower = new Date(Date.now() + 1000*60*60*24*30*(j-1)).toLocaleDateString("en-US")
+				const rangeHigher= new Date(Date.now() + 1000*60*60*24*30*j).toLocaleDateString("en-US")
+				for (let i=0; i<peopleActivityList.length; i++) {
+					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
+						individualDataObj['monthly' + j] = individualDataObj['monthly' + j] + 1
+					}
+				}
+			}
 		}
 		console.log(`Individual Data Obj:`, individualDataObj)
 		Object.keys(individualDataObj).forEach(key => {
@@ -455,8 +473,25 @@ class Active extends React.Component {
 		})
 	}
 
+	sortTickValues = (values) => {
+		const formattedArray = []
+		values.forEach(value => {
+			formattedArray.push(value.y)
+		})
+		const sortedArray = formattedArray.sort((a, b) => a-b)
+		console.log(`This is sorted Array:`)
+		return sortedArray
+	}
+
 	render() {
 		//Make change in the data part of the react table
+
+		// --- Graph Formatting 
+		const dayValue = this.activityTime("day")
+		const weeklyValue = this.activityTime("weekly")
+		const monthlyValue = this.activityTime('monthly')
+		console.log(`This is weekly  monthlyValue:`,  monthlyValue)
+		// --- 
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
@@ -629,15 +664,55 @@ class Active extends React.Component {
 						style={{borderRadius:10,marginTop:15}} />
 				</>)
 					:
-					(<VictoryChart
+					(<div>
+					<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}
-
 						>
+						<VictoryAxis dependentAxis 
+						tickValues={this.sortTickValues(dayValue)}
+						/>
+
+						<VictoryAxis tickFormat={() => ''} 
+						label="Days vs Activity"/>	
+						
 					<VictoryLine
-						data={this.activityTime("day")}
+						data={dayValue}
 					/>
-			</VictoryChart>)
+			</VictoryChart>
+			
+			<VictoryChart
+						theme={VictoryTheme.material}
+						minDomain={{ y: 0 }}
+						>
+						<VictoryAxis dependentAxis 
+						tickValues={this.sortTickValues(weeklyValue)}
+						/>
+
+						<VictoryAxis tickFormat={() => ''} 
+						label="Weeks vs Activity"/>	
+						
+					<VictoryLine
+						data={weeklyValue}
+					/>
+			</VictoryChart>
+			
+			<VictoryChart
+						theme={VictoryTheme.material}
+						minDomain={{ y: 0 }}
+						>
+						<VictoryAxis dependentAxis 
+						tickValues={this.sortTickValues(monthlyValue)}
+						/>
+
+						<VictoryAxis tickFormat={() => ''} 
+						label="Day vs Activity"/>	
+						
+					<VictoryLine
+						data={monthlyValue}
+					/>
+			</VictoryChart>
+			</div>)
 			}
 				</section>
 			)
