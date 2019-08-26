@@ -80,7 +80,8 @@ class Active extends React.Component {
 			sortingpanel:[],
 			data_table:[],
 			user_activity: [],
-			dataVisulatization: false
+			dataVisulatization: false, 
+	
 		}
 	}
 
@@ -98,10 +99,6 @@ class Active extends React.Component {
 				console.log(`data From users:`, data)
 				this.setState({user_activity: data.catWorksPersonal.userActivity})
 			})
-	}
-
-	graphRangeCreator = (rangeCalculation) => {
-
 	}
 
 
@@ -136,7 +133,32 @@ class Active extends React.Component {
 		return individualDataObj
 	}
 
+
+
+	sortingDataForGraph= (propertyKey) => {
+	const peopleList = this.state.data_table
+	console.log(`This People list,`, peopleList)
+	let individualDataObj = {}
+	const filteredData = []
+	for (let i=0; i<peopleList.length; i++) {
+		const nameInLowerCase = peopleList[i][propertyKey].toLowerCase()
+		if (individualDataObj.hasOwnProperty(peopleList[i].nameInLowerCase)) {
+			individualDataObj[nameInLowerCase] = individualDataObj[nameInLowerCase] + 1
+		} else {
+			individualDataObj[nameInLowerCase] = 1 
+		}
+	}
+	Object.keys(individualDataObj).forEach(key => {
+		filteredData.push({
+			x:key,
+			y:individualDataObj[key]
+		})
+	})
+	return filteredData	
+}
+
 	activityTime = (period) => {
+
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
 		let individualDataObj = {}
@@ -349,13 +371,13 @@ class Active extends React.Component {
 		this.setState({modalIsOpen: true});
 	  }
 	 
+
+
 	handleAnchorEl = (event,field) => {
-		var func = this
 		this.setState({anchorEl:event.currentTarget})
-		let list = []
+		const list = []
 		const {sortingpanel,data_table} = this.state;
 		let field_value = field
-		var func = this
 		//Change here data_table to this._$people 
 		_.each(data_table,(data,i)=>{
 			if(sortingpanel.length > 0){
@@ -374,7 +396,7 @@ class Active extends React.Component {
 
 			if(i === data_table.length - 1){
 			  let unique = _.uniqBy(list,'value')
-			  func.setState({
+			  this.setState({
 				  list:unique,
 				  sort_field:field_value
 			  })
@@ -478,8 +500,11 @@ class Active extends React.Component {
 		const dayValue = this.activityTime("day")
 		const weeklyValue = this.activityTime("weekly")
 		const monthlyValue = this.activityTime('monthly')
-		console.log(`This is weekly  monthlyValue:`,  monthlyValue)
-		// --- 
+		// --- Graph Source 
+		const sourceInfo = this.sortingDataForGraph('source')
+		const companyInfo = this.sortingDataForGraph('company')
+		console.log(sourceInfo, companyInfo)
+		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
@@ -659,6 +684,44 @@ class Active extends React.Component {
 							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">bar_chart</i></p>
 							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">table_chart</i></p>
 						</div> 
+						<div style={{display: "flex", flexDirection: "row"}}>
+						<VictoryPie
+							data={sourceInfo}
+							height={200}
+							style={{
+								labels: {
+									fontSize: 12
+								}
+							}}
+							radius={55}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}
+							labels={(d) => {
+								const formatingLabel = d.x.split('_').join(" ")
+								return formatingLabel
+							}}
+						/>
+							<VictoryPie
+							data={companyInfo}
+							radius={55}
+							height={200}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 5000 }
+							}}
+							style={{
+								labels: {
+									fontSize: 12
+								}
+							}}
+							labels={(d) => {
+								const formatingLabel = d.x.split('_').join(" ")
+								return formatingLabel
+							}}
+						/>
+						</div>
 						<div style={{display: "flex", flexDirection: "row"}}>
 						<VictoryChart
 							theme={VictoryTheme.material}
