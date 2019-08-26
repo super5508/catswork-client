@@ -127,9 +127,9 @@ class Active extends React.Component {
 		const individualDataObj = {}
 		const filteredData = []
 		if (period === 'day') {
-			const singleDayTimeStamp = 1000*60*60*24
 			for (let j=0; j<30; j++) {
 			// We want for next 30 days
+			const singleDayTimeStamp = 1000*60*60*24
 			const formatedGivenTime = new Date(Date.now() + 1000*60*60*24*j).toLocaleDateString("en-US")
 			individualDataObj[formatedGivenTime] = 0 // Event doesn't have any activity on that day initially
 			for (let i=0; i<peopleActivityList.length; i++) {
@@ -164,7 +164,6 @@ class Active extends React.Component {
 				}
 			}
 		}
-		console.log(`Individual Data Obj:`, individualDataObj)
 		Object.keys(individualDataObj).forEach(key => {
 			filteredData.push({
 				x:key,
@@ -665,81 +664,89 @@ class Active extends React.Component {
 						style={{borderRadius:10,marginTop:15}} />
 				</>)
 					:
-					(<div style={{display: "flex", flexDirection: "row"}}>
-					<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(dayValue)}
-						/>
+					(<div> 			
+						<div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+							<p style={{marginLeft: 5, marginRight: 15}}> Change Chart Type: </p>	
+							<p style={{border: "1px solid black", padding: 5}}><i class="material-icons">pie_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">bar_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">table_chart</i></p>
+						</div> 
+						<div style={{display: "flex", flexDirection: "row"}}>
+						<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(dayValue)}
+							/>
 
-						<VictoryAxis tickFormat={() => ''} 
-						label="Daily Activity due"/>	
-						
-					<VictoryLine
-						data={dayValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 1
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}						
-					/>
-			</VictoryChart>
-			
-			<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(weeklyValue)}
+							<VictoryAxis tickFormat={() => ''} 
+							label="Daily Activity due"/>	
+							
+						<VictoryLine
+							data={dayValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 1
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}						
 						/>
+				</VictoryChart>
+				
+				<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(weeklyValue)}
+							/>
 
-						<VictoryAxis tickFormat={() => ''} 
-						label="Weekly Activity Due"/>	
-						
-					<VictoryLine
-						data={weeklyValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 2
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}	
-					/>
-			</VictoryChart>
-			
-			<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(monthlyValue)}
+							<VictoryAxis tickFormat={() => ''} 
+							label="Weekly Activity Due"/>	
+							
+						<VictoryLine
+							data={weeklyValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 2
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}	
 						/>
+				</VictoryChart>
+				
+				<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(monthlyValue)}
+							/>
 
-						<VictoryAxis tickFormat={() => ''} 
-						label="Monthly Activity due"/>	
-						
-					<VictoryLine
-						data={monthlyValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 2
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}	
-					/>
-			</VictoryChart>
+							<VictoryAxis tickFormat={() => ''} 
+							label="Monthly Activity due"/>	
+							
+						<VictoryLine
+							data={monthlyValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 2
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}	
+						/>
+				</VictoryChart>
+				</div>
 			</div>)
 			}
 				</section>
