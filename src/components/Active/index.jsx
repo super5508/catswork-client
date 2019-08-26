@@ -81,7 +81,6 @@ class Active extends React.Component {
 			data_table:[],
 			user_activity: [],
 			dataVisulatization: false
-
 		}
 	}
 
@@ -121,49 +120,39 @@ class Active extends React.Component {
 	// 	return individualDataObj
 	// }
 
+	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
+		const individualDataObj = {}
+		const time = graphPeriod === 4? 7 : 30
+		for (let j=0; j<graphPeriod; j++) {
+			individualDataObj['event' + j] = 0
+			const rangeLower = new Date(Date.now() + 1000*60*60*24*time *(j-1)).toLocaleDateString("en-US")
+			const rangeHigher= new Date(Date.now() + 1000*60*60*24*time *j).toLocaleDateString("en-US")
+			for (let i=0; i<peopleActivityList.length; i++) {
+				if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
+					individualDataObj['event' + j] = individualDataObj['event' + j] + 1
+				}
+			}
+		}
+		return individualDataObj
+	}
+
 	activityTime = (period) => {
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
-		const individualDataObj = {}
+		let individualDataObj = {}
 		const filteredData = []
 		if (period === 'day') {
 			for (let j=0; j<30; j++) {
-			// We want for next 30 days
 			const singleDayTimeStamp = 1000*60*60*24
 			const formatedGivenTime = new Date(Date.now() + 1000*60*60*24*j).toLocaleDateString("en-US")
-			individualDataObj[formatedGivenTime] = 0 // Event doesn't have any activity on that day initially
+			individualDataObj[formatedGivenTime] = 0 
 			for (let i=0; i<peopleActivityList.length; i++) {
-				// itterating over all the items in people activity list and checking if it is for current date
-				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) {
-					individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
-				}
+				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
 			}
 		}
-		} else if (period === 'weekly') {
-			// Get Values for next 4 weeks
-			for (let j=0; j<4; j++) {
-				individualDataObj['week' + j] = 0
-				const rangeLower = new Date(Date.now() + 1000*60*60*24*7*(j-1)).toLocaleDateString("en-US")
-				const rangeHigher= new Date(Date.now() + 1000*60*60*24*7*j).toLocaleDateString("en-US")
-				for (let i=0; i<peopleActivityList.length; i++) {
-					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
-						individualDataObj['week' + j] = individualDataObj['week' + j] + 1
-					}
-				}
-			}
-		} else if (period === 'monthly') {
-			for (let j=0; j<12; j++) {
-				// Note: Quick Work Around, we are assuming here that every month have 30 days
-				individualDataObj['monthly' + j] = 0
-				const rangeLower = new Date(Date.now() + 1000*60*60*24*30*(j-1)).toLocaleDateString("en-US")
-				const rangeHigher= new Date(Date.now() + 1000*60*60*24*30*j).toLocaleDateString("en-US")
-				for (let i=0; i<peopleActivityList.length; i++) {
-					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
-						individualDataObj['monthly' + j] = individualDataObj['monthly' + j] + 1
-					}
-				}
-			}
-		}
+		} else if (period === 'weekly') individualDataObj = this.createGraphObjforMonthAndWeekly(4, peopleActivityList)
+		 else if (period === 'monthly') individualDataObj = this.createGraphObjforMonthAndWeekly(12, peopleActivityList)
+
 		Object.keys(individualDataObj).forEach(key => {
 			filteredData.push({
 				x:key,
@@ -390,7 +379,6 @@ class Active extends React.Component {
 				  sort_field:field_value
 			  })
 			}
-
 		})
 	}
 	 
@@ -485,7 +473,7 @@ class Active extends React.Component {
 
 	render() {
 		//Make change in the data part of the react table
-
+		console.log(`Found`, found, `State:`, this.state)
 		// --- Graph Formatting 
 		const dayValue = this.activityTime("day")
 		const weeklyValue = this.activityTime("weekly")
