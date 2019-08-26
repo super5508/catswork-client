@@ -23,6 +23,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Check from '@material-ui/icons/Check';
 import ButtonMaterial from '@material-ui/core/Button';
+import { flexbox } from '@material-ui/system';
 
 let found = []
 
@@ -664,7 +665,7 @@ class Active extends React.Component {
 						style={{borderRadius:10,marginTop:15}} />
 				</>)
 					:
-					(<div>
+					(<div style={{display: "flex", flexDirection: "row"}}>
 					<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}
@@ -674,10 +675,19 @@ class Active extends React.Component {
 						/>
 
 						<VictoryAxis tickFormat={() => ''} 
-						label="Days vs Activity"/>	
+						label="Daily Activity due"/>	
 						
 					<VictoryLine
 						data={dayValue}
+						style={{
+							data: {
+								stroke: "#FF5722", strokeWidth: 1
+							}
+						}}
+						animate={{
+							duration: 2000,
+							onLoad: { duration: 1000 }
+						}}						
 					/>
 			</VictoryChart>
 			
@@ -690,10 +700,19 @@ class Active extends React.Component {
 						/>
 
 						<VictoryAxis tickFormat={() => ''} 
-						label="Weeks vs Activity"/>	
+						label="Weekly Activity Due"/>	
 						
 					<VictoryLine
 						data={weeklyValue}
+						style={{
+							data: {
+								stroke: "#FF5722", strokeWidth: 2
+							}
+						}}
+						animate={{
+							duration: 2000,
+							onLoad: { duration: 1000 }
+						}}	
 					/>
 			</VictoryChart>
 			
@@ -706,10 +725,19 @@ class Active extends React.Component {
 						/>
 
 						<VictoryAxis tickFormat={() => ''} 
-						label="Day vs Activity"/>	
+						label="Monthly Activity due"/>	
 						
 					<VictoryLine
 						data={monthlyValue}
+						style={{
+							data: {
+								stroke: "#FF5722", strokeWidth: 2
+							}
+						}}
+						animate={{
+							duration: 2000,
+							onLoad: { duration: 1000 }
+						}}	
 					/>
 			</VictoryChart>
 			</div>)
