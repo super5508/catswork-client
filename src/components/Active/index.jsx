@@ -537,7 +537,7 @@ class Active extends React.Component {
 		else {
 			content = (
 				<section className={s.active}>
-					<button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button>
+					{/* <button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button> */}
 				{ !this.state.dataVisulatization? (
 				<>
 					<Popover
@@ -630,7 +630,7 @@ class Active extends React.Component {
 						showPagination={false}
 						minRows={10}
 						noDataText='Nothing here'
-						style={{borderRadius:10,marginTop:15}} />)
+						style={{borderRadius:10,marginTop:15}} />
 				</>)
 					:
 					(<VictoryChart
