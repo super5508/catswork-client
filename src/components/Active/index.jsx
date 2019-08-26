@@ -105,39 +105,37 @@ class Active extends React.Component {
 	}
 
 
-	const getFilteredDate = (peopleActivityList, endRange) => {
-		const individualDataObj = {}
-		for (let i=0; i<peopleActivityList.length; i++) {
-			if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
-				const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
-				if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
-						individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
-				} else {
-					individualDataObj[convertIntoEnUsaDateFormat] = 1
-				}
-			}
-		}
-		return individualDataObj
-	}
+	// const getFilteredDate = (peopleActivityList, endRange) => {
+	// 	const individualDataObj = {}
+	// 	for (let i=0; i<peopleActivityList.length; i++) {
+	// 		if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
+	// 			const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
+	// 			if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
+	// 					individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
+	// 			} else {
+	// 				individualDataObj[convertIntoEnUsaDateFormat] = 1
+	// 			}
+	// 		}
+	// 	}
+	// 	return individualDataObj
+	// }
 
 	activityTime = (period) => {
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
 		const filteredData = [{x:0, y:0}]
-		let individualDataObj = {}
+		const individualDataObj = {}
 		if (period === 'day') {
-			const individualDataObj = {}
 			const singleDayTimeStamp = 1000*60*60*24
 			for (let j=0; j<30; j++) {
 			// We want for next 30 days
-			const timeStampForTheGivenDay = Date.now() + 1000*60*60*24*j
-			individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")] = 0 // Event doesn't have any activity on that day initially
+			const formatedGivenTime = new Date(Date.now() + 1000*60*60*24*j).toLocaleDateString("en-US")
+			individualDataObj[formatedGivenTime] = 0 // Event doesn't have any activity on that day initially
 			for (let i=0; i<peopleActivityList.length; i++) {
 				// itterating over all the items in people activity list and checking if it is for current date
-				console.log(new Date(timeStampForTheGivenDay), new Date(peopleActivityList[i].date))
-				if (new Date(timeStampForTheGivenDay) === new Date(peopleActivityList[i].date)) {
-					individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")] += 1
-					console.log(individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")])
+				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) {
+					individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
+					console.log(individualDataObj[formatedGivenTime])
 				}
 			}
 		}
@@ -459,8 +457,6 @@ class Active extends React.Component {
 
 	render() {
 		//Make change in the data part of the react table
-		const dailyActivityGraph = 	this.activityTime("day")
-		console.log(`dailyActivityGraph:`, dailyActivityGraph)
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
@@ -537,7 +533,7 @@ class Active extends React.Component {
 		else {
 			content = (
 				<section className={s.active}>
-					{/* <button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button> */}
+					<button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button>
 				{ !this.state.dataVisulatization? (
 				<>
 					<Popover
@@ -634,14 +630,12 @@ class Active extends React.Component {
 				</>)
 					:
 					(<VictoryChart
-  					theme={VictoryTheme.material}
+						theme={VictoryTheme.material}
+						minDomain={{ y: 0 }}
+
 						>
 					<VictoryLine
-						style={{
-							data: { stroke: "#c43a31" },
-							parent: { border: "1px solid #ccc"}
-						}}
-						data={dailyActivityGraph}
+						data={this.activityTime("day")}
 					/>
 			</VictoryChart>)
 			}
