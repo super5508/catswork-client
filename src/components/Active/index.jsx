@@ -80,8 +80,8 @@ class Active extends React.Component {
 			sortingpanel:[],
 			data_table:[],
 			user_activity: [],
-			dataVisulatization: false
-
+			dataVisulatization: false, 
+	
 		}
 	}
 
@@ -101,10 +101,6 @@ class Active extends React.Component {
 			})
 	}
 
-	graphRangeCreator = (rangeCalculation) => {
-
-	}
-
 
 	// const getFilteredDate = (peopleActivityList, endRange) => {
 	// 	const individualDataObj = {}
@@ -121,50 +117,64 @@ class Active extends React.Component {
 	// 	return individualDataObj
 	// }
 
+	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
+		const individualDataObj = {}
+		const time = graphPeriod === 4? 7 : 30
+		for (let j=0; j<graphPeriod; j++) {
+			individualDataObj['event' + j] = 0
+			const rangeLower = new Date(Date.now() + 1000*60*60*24*time *(j-1)).toLocaleDateString("en-US")
+			const rangeHigher= new Date(Date.now() + 1000*60*60*24*time *j).toLocaleDateString("en-US")
+			for (let i=0; i<peopleActivityList.length; i++) {
+				if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
+					individualDataObj['event' + j] = individualDataObj['event' + j] + 1
+				}
+			}
+		}
+		return individualDataObj
+	}
+
+
+
+	sortingDataForGraph= (propertyKey) => {
+	const peopleList = this.state.data_table
+	console.log(`This People list,`, peopleList)
+	let individualDataObj = {}
+	const filteredData = []
+	for (let i=0; i<peopleList.length; i++) {
+		const nameInLowerCase = peopleList[i][propertyKey].toLowerCase()
+		if (individualDataObj.hasOwnProperty(peopleList[i].nameInLowerCase)) {
+			individualDataObj[nameInLowerCase] = individualDataObj[nameInLowerCase] + 1
+		} else {
+			individualDataObj[nameInLowerCase] = 1 
+		}
+	}
+	Object.keys(individualDataObj).forEach(key => {
+		filteredData.push({
+			x:key,
+			y:individualDataObj[key]
+		})
+	})
+	return filteredData	
+}
+
 	activityTime = (period) => {
+
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
-		const individualDataObj = {}
+		let individualDataObj = {}
 		const filteredData = []
 		if (period === 'day') {
-			const singleDayTimeStamp = 1000*60*60*24
 			for (let j=0; j<30; j++) {
-			// We want for next 30 days
+			const singleDayTimeStamp = 1000*60*60*24
 			const formatedGivenTime = new Date(Date.now() + 1000*60*60*24*j).toLocaleDateString("en-US")
-			individualDataObj[formatedGivenTime] = 0 // Event doesn't have any activity on that day initially
+			individualDataObj[formatedGivenTime] = 0 
 			for (let i=0; i<peopleActivityList.length; i++) {
-				// itterating over all the items in people activity list and checking if it is for current date
-				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) {
-					individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
-				}
+				if (formatedGivenTime === new Date(peopleActivityList[i].date).toLocaleDateString("en-US")) individualDataObj[formatedGivenTime] = individualDataObj[formatedGivenTime] + 1
 			}
 		}
-		} else if (period === 'weekly') {
-			// Get Values for next 4 weeks
-			for (let j=0; j<4; j++) {
-				individualDataObj['week' + j] = 0
-				const rangeLower = new Date(Date.now() + 1000*60*60*24*7*(j-1)).toLocaleDateString("en-US")
-				const rangeHigher= new Date(Date.now() + 1000*60*60*24*7*j).toLocaleDateString("en-US")
-				for (let i=0; i<peopleActivityList.length; i++) {
-					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
-						individualDataObj['week' + j] = individualDataObj['week' + j] + 1
-					}
-				}
-			}
-		} else if (period === 'monthly') {
-			for (let j=0; j<12; j++) {
-				// Note: Quick Work Around, we are assuming here that every month have 30 days
-				individualDataObj['monthly' + j] = 0
-				const rangeLower = new Date(Date.now() + 1000*60*60*24*30*(j-1)).toLocaleDateString("en-US")
-				const rangeHigher= new Date(Date.now() + 1000*60*60*24*30*j).toLocaleDateString("en-US")
-				for (let i=0; i<peopleActivityList.length; i++) {
-					if (rangeLower < new Date(peopleActivityList[i].date).toLocaleDateString("en-US") && new Date(peopleActivityList[i].date).toLocaleDateString("en-US") < rangeHigher) {
-						individualDataObj['monthly' + j] = individualDataObj['monthly' + j] + 1
-					}
-				}
-			}
-		}
-		console.log(`Individual Data Obj:`, individualDataObj)
+		} else if (period === 'weekly') individualDataObj = this.createGraphObjforMonthAndWeekly(4, peopleActivityList)
+		 else if (period === 'monthly') individualDataObj = this.createGraphObjforMonthAndWeekly(12, peopleActivityList)
+
 		Object.keys(individualDataObj).forEach(key => {
 			filteredData.push({
 				x:key,
@@ -361,13 +371,13 @@ class Active extends React.Component {
 		this.setState({modalIsOpen: true});
 	  }
 	 
+
+
 	handleAnchorEl = (event,field) => {
-		var func = this
 		this.setState({anchorEl:event.currentTarget})
-		let list = []
+		const list = []
 		const {sortingpanel,data_table} = this.state;
 		let field_value = field
-		var func = this
 		//Change here data_table to this._$people 
 		_.each(data_table,(data,i)=>{
 			if(sortingpanel.length > 0){
@@ -386,12 +396,11 @@ class Active extends React.Component {
 
 			if(i === data_table.length - 1){
 			  let unique = _.uniqBy(list,'value')
-			  func.setState({
+			  this.setState({
 				  list:unique,
 				  sort_field:field_value
 			  })
 			}
-
 		})
 	}
 	 
@@ -486,13 +495,16 @@ class Active extends React.Component {
 
 	render() {
 		//Make change in the data part of the react table
-
+		console.log(`Found`, found, `State:`, this.state)
 		// --- Graph Formatting 
 		const dayValue = this.activityTime("day")
 		const weeklyValue = this.activityTime("weekly")
 		const monthlyValue = this.activityTime('monthly')
-		console.log(`This is weekly  monthlyValue:`,  monthlyValue)
-		// --- 
+		// --- Graph Source 
+		const sourceInfo = this.sortingDataForGraph('source')
+		const companyInfo = this.sortingDataForGraph('company')
+		console.log(sourceInfo, companyInfo)
+		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
 		const COLUMNS = [{
@@ -665,81 +677,127 @@ class Active extends React.Component {
 						style={{borderRadius:10,marginTop:15}} />
 				</>)
 					:
-					(<div style={{display: "flex", flexDirection: "row"}}>
-					<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(dayValue)}
+					(<div> 			
+						<div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+							<p style={{marginLeft: 5, marginRight: 15}}> Change Chart Type: </p>	
+							<p style={{border: "1px solid black", padding: 5}}><i class="material-icons">pie_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">bar_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">table_chart</i></p>
+						</div> 
+						<div style={{display: "flex", flexDirection: "row"}}>
+						<VictoryPie
+							data={sourceInfo}
+							height={200}
+							style={{
+								labels: {
+									fontSize: 12
+								}
+							}}
+							radius={55}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}
+							labels={(d) => {
+								const formatingLabel = d.x.split('_').join(" ")
+								return formatingLabel
+							}}
 						/>
-
-						<VictoryAxis tickFormat={() => ''} 
-						label="Daily Activity due"/>	
-						
-					<VictoryLine
-						data={dayValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 1
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}						
-					/>
-			</VictoryChart>
-			
-			<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(weeklyValue)}
+							<VictoryPie
+							data={companyInfo}
+							radius={55}
+							height={200}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 5000 }
+							}}
+							style={{
+								labels: {
+									fontSize: 12
+								}
+							}}
+							labels={(d) => {
+								const formatingLabel = d.x.split('_').join(" ")
+								return formatingLabel
+							}}
 						/>
+						</div>
+						<div style={{display: "flex", flexDirection: "row"}}>
+						<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(dayValue)}
+							/>
 
-						<VictoryAxis tickFormat={() => ''} 
-						label="Weekly Activity Due"/>	
-						
-					<VictoryLine
-						data={weeklyValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 2
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}	
-					/>
-			</VictoryChart>
-			
-			<VictoryChart
-						theme={VictoryTheme.material}
-						minDomain={{ y: 0 }}
-						>
-						<VictoryAxis dependentAxis 
-						tickValues={this.sortTickValues(monthlyValue)}
+							<VictoryAxis tickFormat={() => ''} 
+							label="Daily Activity due"/>	
+							
+						<VictoryLine
+							data={dayValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 1
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}						
 						/>
+				</VictoryChart>
+				
+				<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(weeklyValue)}
+							/>
 
-						<VictoryAxis tickFormat={() => ''} 
-						label="Monthly Activity due"/>	
-						
-					<VictoryLine
-						data={monthlyValue}
-						style={{
-							data: {
-								stroke: "#FF5722", strokeWidth: 2
-							}
-						}}
-						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
-						}}	
-					/>
-			</VictoryChart>
+							<VictoryAxis tickFormat={() => ''} 
+							label="Weekly Activity Due"/>	
+							
+						<VictoryLine
+							data={weeklyValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 2
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}	
+						/>
+				</VictoryChart>
+				
+				<VictoryChart
+							theme={VictoryTheme.material}
+							minDomain={{ y: 0 }}
+							>
+							<VictoryAxis dependentAxis 
+							tickValues={this.sortTickValues(monthlyValue)}
+							/>
+
+							<VictoryAxis tickFormat={() => ''} 
+							label="Monthly Activity due"/>	
+							
+						<VictoryLine
+							data={monthlyValue}
+							style={{
+								data: {
+									stroke: "#FF5722", strokeWidth: 2
+								}
+							}}
+							animate={{
+								duration: 2000,
+								onLoad: { duration: 1000 }
+							}}	
+						/>
+				</VictoryChart>
+				</div>
 			</div>)
 			}
 				</section>
