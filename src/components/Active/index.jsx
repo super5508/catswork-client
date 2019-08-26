@@ -569,7 +569,7 @@ class Active extends React.Component {
 		else {
 			content = (
 				<section className={s.active}>
-					<button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> Toggle Data Visualization </button>
+				
 				{ !this.state.dataVisulatization? (
 				<>
 					<Popover
@@ -749,6 +749,7 @@ class Active extends React.Component {
 		return (
 			<>
 				<Nav>
+					<Button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> {this.state.dataVisulatization ? "Performance Analysis": "Dashboard"} </Button>
 					<Button href='auth/logout'>Sign out</Button>
 				</Nav>
 				{content}
