@@ -121,23 +121,23 @@ class Active extends React.Component {
 	}
 
 	activityTime = (period) => {
-		const getcurrentTimeStamp = Date.now()
+		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
 		const filteredData = [{x:0, y:0}]
 		let individualDataObj = {}
 		if (period === 'day') {
 			const individualDataObj = {}
 			const singleDayTimeStamp = 1000*60*60*24
-			const next30DaysTimeStamp = getcurrentTimeStamp + singleDayTimeStamp *30
-		for (let j=0; j<30; j++) {
+			for (let j=0; j<30; j++) {
+			// We want for next 30 days
+			const timeStampForTheGivenDay = Date.now() + 1000*60*60*24*j
+			individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")] = 0 // Event doesn't have any activity on that day initially
 			for (let i=0; i<peopleActivityList.length; i++) {
-				if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
-					const convertIntoEnUsaDateFormat = new Date(singleDayTimeStamp).toLocaleDateString("en-US")
-					if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
-							individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
-					} else {
-						individualDataObj[convertIntoEnUsaDateFormat] = 1
-					}
+				// itterating over all the items in people activity list and checking if it is for current date
+				console.log(new Date(timeStampForTheGivenDay), new Date(peopleActivityList[i].date))
+				if (new Date(timeStampForTheGivenDay) === new Date(peopleActivityList[i].date)) {
+					individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")] += 1
+					console.log(individualDataObj[new Date(timeStampForTheGivenDay).toLocaleDateString("en-US")])
 				}
 			}
 		}
