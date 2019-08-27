@@ -764,7 +764,14 @@ class Active extends React.Component {
 						</div>)
 						: null }
 
-
+					{/* Table */}
+					{this.state.typeOfGraph === 'Table' ? (	
+							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
+							
+							</div>
+					)
+					: null 
+					}
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
 							<h3>Daily Activity</h3>
