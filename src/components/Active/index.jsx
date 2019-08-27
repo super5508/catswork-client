@@ -680,11 +680,11 @@ class Active extends React.Component {
 					(<div> 			
 						<div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
 							<p style={{marginLeft: 5, marginRight: 15}}> Change Chart Type: </p>	
-							<p style={{border: "1px solid black", padding: 5}}><i class="material-icons">pie_chart</i></p>
-							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">bar_chart</i></p>
-							<p style={{marginLeft: 5, border: "1px solid black", padding: 5}}><i class="material-icons">table_chart</i></p>
+							<p style={{border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">pie_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">bar_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">table_chart</i></p>
 						</div> 
-						<div style={{display: "flex", flexDirection: "row"}}>
+						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 						<VictoryPie
 							data={sourceInfo}
 							height={200}
@@ -722,7 +722,9 @@ class Active extends React.Component {
 							}}
 						/>
 						</div>
-						<div style={{display: "flex", flexDirection: "row"}}>
+						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
+						<div>
+						<p> Daily Activity due</p>
 						<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -747,7 +749,9 @@ class Active extends React.Component {
 							}}						
 						/>
 				</VictoryChart>
-				
+				</div>
+				<div>
+				<p> Weekly Activity due</p>
 				<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -772,31 +776,34 @@ class Active extends React.Component {
 							}}	
 						/>
 				</VictoryChart>
-				
-				<VictoryChart
-							theme={VictoryTheme.material}
-							minDomain={{ y: 0 }}
-							>
-							<VictoryAxis dependentAxis 
-							tickValues={this.sortTickValues(monthlyValue)}
-							/>
+				</div>
+				<div>
+					<p> Monthly Activity due</p>
+					<VictoryChart
+								theme={VictoryTheme.material}
+								minDomain={{ y: 0 }}
+								>
+								<VictoryAxis dependentAxis 
+								tickValues={this.sortTickValues(monthlyValue)}
+								/>
 
-							<VictoryAxis tickFormat={() => ''} 
-							label="Monthly Activity due"/>	
-							
-						<VictoryLine
-							data={monthlyValue}
-							style={{
-								data: {
-									stroke: "#FF5722", strokeWidth: 2
-								}
-							}}
-							animate={{
-								duration: 2000,
-								onLoad: { duration: 1000 }
-							}}	
-						/>
-				</VictoryChart>
+								<VictoryAxis tickFormat={() => ''} 
+								label="Monthly Activity due"/>	
+								
+							<VictoryLine
+								data={monthlyValue}
+								style={{
+									data: {
+										stroke: "#FF5722", strokeWidth: 2
+									}
+								}}
+								animate={{
+									duration: 2000,
+									onLoad: { duration: 1000 }
+								}}	
+							/>
+					</VictoryChart>
+				</div>
 				</div>
 			</div>)
 			}
@@ -807,7 +814,7 @@ class Active extends React.Component {
 		return (
 			<>
 				<Nav>
-					<Button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> {this.state.dataVisulatization ? "Performance Analysis": "Dashboard"} </Button>
+					<Button onClick={() => this.setState({dataVisulatization: !this.state.dataVisulatization})}> {this.state.dataVisulatization ?  "Dashboard" : "Performance Analysis"} </Button>
 					<Button href='auth/logout'>Sign out</Button>
 				</Nav>
 				{content}
