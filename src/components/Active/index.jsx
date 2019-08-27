@@ -489,7 +489,6 @@ class Active extends React.Component {
 			formattedArray.push(value.y)
 		})
 		const sortedArray = formattedArray.sort((a, b) => a-b)
-		console.log(`This is sorted Array:`)
 		return sortedArray
 	}
 
@@ -766,9 +765,39 @@ class Active extends React.Component {
 
 					{/* Table */}
 					{this.state.typeOfGraph === 'Table' ? (	
-							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
-							
+							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
+								<div>
+								<h3>Souce Info</h3>
+								<table style={{border: "1px solid black",  align:"left"}}>
+									<tr>
+										<th style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>Company Name</th>
+										<th style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>Value</th> 
+									</tr>
+									{sourceInfo.map(el => (
+										<tr>
+											<td style={{border: "1px solid black",  padding: 15,  align:"left", width:200}}>{el.x.split('_').join(' ')}</td>
+											<td style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>{el.y}</td>
+										</tr>
+									))}
+									</table>
+								</div>
+								<div>
+								<h3>Company Info</h3>
+								<table style={{border: "1px solid black",  align:"left"}}>
+									<tr>
+										<th style={{border: "1px solid black", align:"left", padding: 15, width:200}}>Souce Info</th>
+										<th style={{border: "1px solid black", align:"left", padding: 15, width:200}}>Value</th> 
+									</tr>
+									{companyInfo.map(el => (
+										<tr>
+											<td style={{border: "1px solid black", align:"left", padding: 15, width:200}}>{el.x.split('_').join(' ')}</td>
+											<td style={{border: "1px solid black", align:"left", padding: 15, width:200}}>{el.y}</td>
+										</tr>
+									))}
+									</table>
+								</div>
 							</div>
+							
 					)
 					: null 
 					}
