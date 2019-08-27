@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import ReactTable from 'react-table'
 import ReactDOM from 'react-dom';
-import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme, VictoryPolarAxis,  VictoryAxis } from "victory";
+import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme, VictoryPolarAxis,  VictoryAxis, VictoryContainer, VictoryBar } from "victory";
 import { EnumIndustry, EnumSource } from 'models/enums'
 import GraphQL, { gql } from 'services/GraphQL'
 import Nav from 'components/Nav'
@@ -81,6 +81,7 @@ class Active extends React.Component {
 			data_table:[],
 			user_activity: [],
 			dataVisulatization: false, 
+			typeOfGraph: 'Pie'
 	
 		}
 	}
@@ -300,7 +301,6 @@ class Active extends React.Component {
 				  }
 
 				  if(x>0 && tile.phone !== ''){
-					console.log("Exec me")
 					let j = tile.phone.length
 					let mnx = tile.phone.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -680,54 +680,99 @@ class Active extends React.Component {
 					(<div> 			
 						<div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
 							<p style={{marginLeft: 5, marginRight: 15}}> Change Chart Type: </p>	
-							<p style={{border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">pie_chart</i></p>
-							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">bar_chart</i></p>
-							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}}><i class="material-icons">table_chart</i></p>
+							<p style={{border: "1px solid black", padding: 5, cursor: "pointer"}} onClick={() => this.setState({typeOfGraph: 'Pie'})}><i class="material-icons">pie_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}} onClick={() => this.setState({typeOfGraph: 'Bar'})}><i class="material-icons">bar_chart</i></p>
+							<p style={{marginLeft: 5, border: "1px solid black", padding: 5, cursor: "pointer"}} onClick={() => this.setState({typeOfGraph: 'Table'})}><i class="material-icons">table_chart</i></p>
 						</div> 
+					{/* Bar */}
+						{this.state.typeOfGraph === 'Pie' ? (		
+								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
+								<div>
+									<h3> Souce Info</h3>
+								<VictoryPie
+									data={sourceInfo}
+									radius={100}
+									containerComponent={<VictoryContainer responsive={false}/>}
+									style={{
+										labels: {
+											fontSize: 15
+										}
+									}}
+									animate={{
+										duration: 2000,
+										onLoad: { duration: 1000 }
+									}}
+									labels={(d) => {
+										const formatingLabel = d.x.split('_').join(" ")
+										return formatingLabel
+									}}
+								/>
+								</div>
+								<div>
+									<h3>Company Info</h3>
+									<VictoryPie
+									data={companyInfo}
+									radius={100}
+									containerComponent={<VictoryContainer responsive={false}/>}
+									animate={{
+										duration: 2000,
+										onLoad: { duration: 5000 }
+									}}
+									style={{
+										labels: {
+											fontSize: 18
+										}
+									}}
+									labels={(d) => {
+										const formatingLabel = d.x.split('_').join(" ")
+										return formatingLabel
+									}}
+								/>
+								</div>
+								</div>
+						)
+					: null}
+					{/* Bar */}
+					{this.state.typeOfGraph === 'Bar' ? (	
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
-						<VictoryPie
-							data={sourceInfo}
-							height={200}
-							style={{
-								labels: {
-									fontSize: 12
-								}
-							}}
-							radius={55}
-							animate={{
-								duration: 2000,
-								onLoad: { duration: 1000 }
-							}}
-							labels={(d) => {
-								const formatingLabel = d.x.split('_').join(" ")
-								return formatingLabel
-							}}
-						/>
-							<VictoryPie
-							data={companyInfo}
-							radius={55}
-							height={200}
-							animate={{
-								duration: 2000,
-								onLoad: { duration: 5000 }
-							}}
-							style={{
-								labels: {
-									fontSize: 12
-								}
-							}}
-							labels={(d) => {
-								const formatingLabel = d.x.split('_').join(" ")
-								return formatingLabel
-							}}
-						/>
+						<div>
+						<h3>Souce Info</h3>
+						<VictoryChart
+								height={400}
+								width={400}
+								containerComponent={<VictoryContainer responsive={false}/>}
+							>
+							<VictoryBar
+								alignment="start"
+								data={sourceInfo}
+								/>
+						</VictoryChart>
 						</div>
+						<div>
+							<h3>Company Info</h3>
+						<VictoryChart
+								height={400}
+								width={400}
+								containerComponent={<VictoryContainer responsive={false}/>}
+							>
+							<VictoryBar
+								alignment="start"
+								data={companyInfo}
+							/>
+						</VictoryChart>
+					</div>
+						</div>)
+						: null }
+
+
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
-						<p> Daily Activity due</p>
+							<h3>Daily Activity</h3>
 						<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
+							containerComponent={<VictoryContainer 
+								responsive={false}/>}
 							>
 							<VictoryAxis dependentAxis 
 							tickValues={this.sortTickValues(dayValue)}
@@ -751,10 +796,11 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-				<p> Weekly Activity due</p>
+					<h3>Weekly Activity</h3>
 				<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
+							containerComponent={<VictoryContainer responsive={false}/>}
 							>
 							<VictoryAxis dependentAxis 
 							tickValues={this.sortTickValues(weeklyValue)}
@@ -778,11 +824,12 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-					<p> Monthly Activity due</p>
-					<VictoryChart
-								theme={VictoryTheme.material}
-								minDomain={{ y: 0 }}
-								>
+						<h3>Monthly Activity</h3>
+				<VictoryChart
+						theme={VictoryTheme.material}
+						minDomain={{ y: 0 }}
+						containerComponent={<VictoryContainer responsive={false}/>}
+				>
 								<VictoryAxis dependentAxis 
 								tickValues={this.sortTickValues(monthlyValue)}
 								/>
@@ -803,8 +850,8 @@ class Active extends React.Component {
 								}}	
 							/>
 					</VictoryChart>
-				</div>
-				</div>
+					</div>
+			</div>
 			</div>)
 			}
 				</section>
