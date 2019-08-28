@@ -70,6 +70,7 @@ class Active extends React.Component {
 
 	constructor(props){
 		super(props);
+		this.renderEditable = this.renderEditable.bind(this)
 		this.state = {
 			searchtext:'',
 			searchpanel:'',
@@ -84,17 +85,25 @@ class Active extends React.Component {
 			data_table:[],
 			user_activity: [],
 			dataVisulatization: false, 
-			typeOfGraph: 'Table'
-	
+			typeOfGraph: 'Table',
+			data: null
 		}
 	}
 
+
+
 	@observable.ref _$people = null
+
+
 
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt)
+				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
+					people.name = people.first + " " + people.last
+					return people
+				})
+				console.log(this._$people )
 				this.setState({data_table: this._$people})
 			}))
 
@@ -104,6 +113,25 @@ class Active extends React.Component {
 			})
 	}
 
+
+	renderEditable(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
+	}
+	
 	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
 		const individualDataObj = {}
 		const time = graphPeriod === 4? 7 : 30
@@ -477,6 +505,25 @@ class Active extends React.Component {
 		return sortedArray
 	}
 
+	renderEditable(cellInfo) {
+		console.log(`Cell info:`, cellInfo)
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          const data = [...this.state.data_table];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data_table[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
+  }
+
 	render() {
 		//Make change in the data part of the react table
 		// --- Graph Formatting 
@@ -494,11 +541,12 @@ class Active extends React.Component {
 			id: 'name',
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'first')}><span>Name</span> <span className={s.columnIconAlignment}><FilterList  style={{height:15,width:15,float:'right'}} /></span></div>,
 			accessor: d => `${d.first} ${d.last}`,
-			style:{textAlign:'center'}
-
+			Cell: this.renderEditable,
+			style:{textAlign:'center'},
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'company')}><span className={s.filterIconContainer}>Company</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'company')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'company',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			id: 'industry',
@@ -508,44 +556,54 @@ class Active extends React.Component {
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'position')}><span className={s.filterIconContainer}>Position</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'position')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'position',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'email')}><span className={s.filterIconContainer}>Email</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'email')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'email',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'phone')}><span className={s.filterIconContainer}>Phone</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'phone')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'phone',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'location')}><span className={s.filterIconContainer}>Location</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'company')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'location',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'education')}><span className={s.filterIconContainer}>Education</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'education')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'education',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'hometown')}><span className={s.filterIconContainer}>Hometown</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'hometown')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'hometown',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: 'Extracurriculars',
 			accessor: 'extracurriculars',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'website')}><span className={s.filterIconContainer}>Website</span> <FilterList onClick={(event) => this.handleAnchorEl(event,'website')} style={{height:15,width:15,float:'right'}} /></div>,
 			accessor: 'website',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			Header: 'Notes',
 			accessor: 'notes',
+			Cell: this.renderEditable,
 			style:{textAlign:'center'}
 		}, {
 			id: 'source',
 			Header: 'Source',
 			accessor: d => d.source === EnumSource.OTHER ? d.sourceCustom : EnumSource[d.source],
 			style:{textAlign:'center'}
+
 		}]
 		
 		const SortedList = list_sort.length > 0 ? list_sort : list
