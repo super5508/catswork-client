@@ -82,8 +82,8 @@ class Active extends React.Component {
 			sortingpanel:[],
 			data_table:[],
 			user_activity: [],
-			dataVisulatization: true, 
-			typeOfGraph: 'Bar'
+			dataVisulatization: false, 
+			typeOfGraph: 'Table'
 	
 		}
 	}
@@ -99,7 +99,6 @@ class Active extends React.Component {
 
 			GraphQL.query(USER_QUERY)
 			.then(({ data }) => {
-				console.log(`data From users:`, data)
 				this.setState({user_activity: data.catWorksPersonal.userActivity})
 			})
 	}
@@ -122,13 +121,12 @@ class Active extends React.Component {
 
 
 
-	sortingDataForGraph= (propertyKey) => {
-	const peopleList = this.state.data_table
+	sortingDataForGraph= (propertyKey,  data) => {
 	let individualDataObj = {}
 	const filteredData = []
-	for (let i=0; i<peopleList.length; i++) {
-		const nameInLowerCase = peopleList[i][propertyKey].toLowerCase()
-		if (individualDataObj.hasOwnProperty(peopleList[i].nameInLowerCase)) {
+	for (let i=0; i<data.length; i++) {
+		const nameInLowerCase = data[i][propertyKey].toLowerCase()
+		if (individualDataObj.hasOwnProperty(nameInLowerCase)) {
 			individualDataObj[nameInLowerCase] = individualDataObj[nameInLowerCase] + 1
 		} else {
 			individualDataObj[nameInLowerCase] = 1 
@@ -303,7 +301,7 @@ class Active extends React.Component {
 	
 			  this.setState({
 				searchpanel:unique,
-			  },() => console.log(this.state.searchpanel))
+			  })
 			} 
 		  })
 	}
@@ -478,15 +476,14 @@ class Active extends React.Component {
 
 	render() {
 		//Make change in the data part of the react table
-		console.log(`Found`, found, `State:`, this.state)
 		// --- Graph Formatting 
 		const dayValue = this.activityTime("day")
 		const weeklyValue = this.activityTime("weekly")
 		const monthlyValue = this.activityTime('monthly')
 		// --- Graph Source 
-		const sourceInfo = this.sortingDataForGraph('source')
-		const companyInfo = this.sortingDataForGraph('company')
-		console.log(sourceInfo, companyInfo)
+		const sourceInfo = this.sortingDataForGraph('source', this.state.data_table)
+		const companyInfo = this.sortingDataForGraph('company', this.state.data_table)
+		const activityInfo = this.sortingDataForGraph('activity', this.state.user_activity)
 		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
@@ -682,6 +679,12 @@ class Active extends React.Component {
 										graphData={companyInfo}
 										/>
 									</div>
+									<div>
+										<h3>Activity Info</h3>
+										<PieGraph 
+										graphData={activityInfo}
+										/>
+									</div>
 								</div>
 						)
 					: null}
@@ -700,6 +703,12 @@ class Active extends React.Component {
 							graphData={companyInfo}
 							/>
 					</div>
+					<div>
+							<h3>Activity Info</h3>
+							<BarGraph
+							graphData={activityInfo}
+							/>
+					</div>
 						</div>)
 						: null }
 
@@ -716,6 +725,12 @@ class Active extends React.Component {
 								<h3>Company Info</h3>
 									<GraphTableCreator
 										graphData={companyInfo}
+									/>
+								</div>
+								<div>
+								<h3>Activity Info</h3>
+									<GraphTableCreator
+										graphData={activityInfo}
 									/>
 								</div>
 							</div>

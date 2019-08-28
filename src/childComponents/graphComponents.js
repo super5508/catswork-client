@@ -46,9 +46,9 @@ export const BarGraph = (props) => {
 }
 
 PieGraph.propTypes = {
-  graphData: PropTypes.object.isRequired,
+  graphData: PropTypes.array.isRequired,
 }
 
 BarGraph.propTypes  = {
-  graphData: PropTypes.object.isRequired,
+  graphData: PropTypes.array.isRequired,
 }
