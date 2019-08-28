@@ -24,7 +24,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Check from '@material-ui/icons/Check';
 import ButtonMaterial from '@material-ui/core/Button';
 import { flexbox } from '@material-ui/system';
-
+import { fixStringValues } from "./../../helperFunction/commonFunctions"
+import { PieGraph, BarGraph } from "./../../childComponents/graphComponents"
+import { GraphTableCreator } from "./../../childComponents/tableCreator"
 let found = []
 
 const PEOPLE_QUERY = gql`
@@ -80,8 +82,8 @@ class Active extends React.Component {
 			sortingpanel:[],
 			data_table:[],
 			user_activity: [],
-			dataVisulatization: false, 
-			typeOfGraph: 'Pie'
+			dataVisulatization: true, 
+			typeOfGraph: 'Bar'
 	
 		}
 	}
@@ -101,22 +103,6 @@ class Active extends React.Component {
 				this.setState({user_activity: data.catWorksPersonal.userActivity})
 			})
 	}
-
-
-	// const getFilteredDate = (peopleActivityList, endRange) => {
-	// 	const individualDataObj = {}
-	// 	for (let i=0; i<peopleActivityList.length; i++) {
-	// 		if (new Date() < new Date(peopleActivityList[i].date) && new Date(peopleActivityList[i].date) < new Date(endRange)) {
-	// 			const convertIntoEnUsaDateFormat = new Date(peopleActivityList[i].date).toLocaleDateString("en-US")
-	// 			if (individualDataObj.hasOwnProperty(convertIntoEnUsaDateFormat)) {
-	// 					individualDataObj[convertIntoEnUsaDateFormat] = individualDataObj[convertIntoEnUsaDateFormat] + 1
-	// 			} else {
-	// 				individualDataObj[convertIntoEnUsaDateFormat] = 1
-	// 			}
-	// 		}
-	// 	}
-	// 	return individualDataObj
-	// }
 
 	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
 		const individualDataObj = {}
@@ -138,7 +124,6 @@ class Active extends React.Component {
 
 	sortingDataForGraph= (propertyKey) => {
 	const peopleList = this.state.data_table
-	console.log(`This People list,`, peopleList)
 	let individualDataObj = {}
 	const filteredData = []
 	for (let i=0; i<peopleList.length; i++) {
@@ -151,7 +136,7 @@ class Active extends React.Component {
 	}
 	Object.keys(individualDataObj).forEach(key => {
 		filteredData.push({
-			x:key,
+			x: fixStringValues(key),
 			y:individualDataObj[key]
 		})
 	})
@@ -159,7 +144,6 @@ class Active extends React.Component {
 }
 
 	activityTime = (period) => {
-
 		const getcurrentTimeStamp = Date.now() 
 		const peopleActivityList = this.state.user_activity
 		let individualDataObj = {}
@@ -686,48 +670,18 @@ class Active extends React.Component {
 					{/* Bar */}
 						{this.state.typeOfGraph === 'Pie' ? (		
 								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
-								<div>
-									<h3> Souce Info</h3>
-								<VictoryPie
-									data={sourceInfo}
-									radius={100}
-									containerComponent={<VictoryContainer responsive={false}/>}
-									style={{
-										labels: {
-											fontSize: 15
-										}
-									}}
-									animate={{
-										duration: 2000,
-										onLoad: { duration: 1000 }
-									}}
-									labels={(d) => {
-										const formatingLabel = d.x.split('_').join(" ")
-										return formatingLabel
-									}}
-								/>
-								</div>
-								<div>
-									<h3>Company Info</h3>
-									<VictoryPie
-									data={companyInfo}
-									radius={100}
-									containerComponent={<VictoryContainer responsive={false}/>}
-									animate={{
-										duration: 2000,
-										onLoad: { duration: 5000 }
-									}}
-									style={{
-										labels: {
-											fontSize: 18
-										}
-									}}
-									labels={(d) => {
-										const formatingLabel = d.x.split('_').join(" ")
-										return formatingLabel
-									}}
-								/>
-								</div>
+									<div>
+										<h3> Souce Info</h3>
+										<PieGraph 
+										graphData={sourceInfo}
+										/>
+									</div>
+									<div>
+										<h3>Company Info</h3>
+										<PieGraph 
+										graphData={companyInfo}
+										/>
+									</div>
 								</div>
 						)
 					: null}
@@ -736,29 +690,15 @@ class Active extends React.Component {
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 						<div>
 						<h3>Souce Info</h3>
-						<VictoryChart
-								height={400}
-								width={400}
-								containerComponent={<VictoryContainer responsive={false}/>}
-							>
-							<VictoryBar
-								alignment="start"
-								data={sourceInfo}
-								/>
-						</VictoryChart>
+							<BarGraph
+							graphData={sourceInfo}
+							/>
 						</div>
 						<div>
 							<h3>Company Info</h3>
-						<VictoryChart
-								height={400}
-								width={400}
-								containerComponent={<VictoryContainer responsive={false}/>}
-							>
-							<VictoryBar
-								alignment="start"
-								data={companyInfo}
+							<BarGraph
+							graphData={companyInfo}
 							/>
-						</VictoryChart>
 					</div>
 						</div>)
 						: null }
@@ -768,33 +708,15 @@ class Active extends React.Component {
 							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
 								<div>
 								<h3>Souce Info</h3>
-								<table style={{border: "1px solid black",  align:"left"}}>
-									<tr>
-										<th style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>Company Name</th>
-										<th style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>Value</th> 
-									</tr>
-									{sourceInfo.map(el => (
-										<tr>
-											<td style={{border: "1px solid black",  padding: 15,  align:"left", width:200}}>{el.x.split('_').join(' ')}</td>
-											<td style={{border: "1px solid black",  align:"left", padding: 15, width:200}}>{el.y}</td>
-										</tr>
-									))}
-									</table>
+								<GraphTableCreator
+										graphData={sourceInfo}
+									/>
 								</div>
 								<div>
 								<h3>Company Info</h3>
-								<table style={{border: "1px solid black",  align:"left"}}>
-									<tr>
-										<th style={{border: "1px solid black", align:"left", padding: 15, width:200}}>Souce Info</th>
-										<th style={{border: "1px solid black", align:"left", padding: 15, width:200}}>Value</th> 
-									</tr>
-									{companyInfo.map(el => (
-										<tr>
-											<td style={{border: "1px solid black", align:"left", padding: 15, width:200}}>{el.x.split('_').join(' ')}</td>
-											<td style={{border: "1px solid black", align:"left", padding: 15, width:200}}>{el.y}</td>
-										</tr>
-									))}
-									</table>
+									<GraphTableCreator
+										graphData={companyInfo}
+									/>
 								</div>
 							</div>
 							
