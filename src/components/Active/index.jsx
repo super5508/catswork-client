@@ -47,7 +47,8 @@ const PEOPLE_QUERY = gql`
 			website
 			notes
 			source
-			sourceCustom
+			sourceCustom,
+			updatedAt
 		}
 	}
 `
@@ -93,7 +94,7 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.catWorksDashboard
+				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt)
 				this.setState({data_table: this._$people})
 			}))
 
@@ -166,6 +167,8 @@ class Active extends React.Component {
 		})
 		return filteredData
 	}
+
+
 
 
 	handleChangeSearchText = (text) => {
