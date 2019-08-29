@@ -65,6 +65,22 @@ query userRootQueryType {
 }
 `
 
+const UPDATE_DASHBOARD_INFO = gql`
+	mutation EditInformationInDashboard($id: Int!, $parameter: userDashboadInputType!) {
+		EditInformationInDashboard(id: $id, parameter: $parameter) {
+				id
+		}
+	}
+`
+
+const DeleteEntireLinkedinProfileData = gql`
+ mutation DeleteEntireLinkedinProfileData($id: Int!, $parameter: request_success!) {
+	DeleteEntireLinkedinProfileData(id: $id) {
+		id
+	}
+ }
+`
+
 @observer
 class Active extends React.Component {
 
@@ -496,6 +512,18 @@ class Active extends React.Component {
 		})
 	}
 
+// 	onRowClick = (state, rowInfo, column, instance) => {
+//     return {
+//         onClick: e => {
+//             console.log('A Td Element was clicked!')
+//             console.log('it produced this event:', e)
+//             console.log('It was in this column:', column)
+//             console.log('It was in this row:', rowInfo)
+//             console.log('It was in this table instance:', instance)
+//         }
+//     }
+// }
+
 	sortTickValues = (values) => {
 		const formattedArray = []
 		values.forEach(value => {
@@ -505,8 +533,8 @@ class Active extends React.Component {
 		return sortedArray
 	}
 
+	// Funtions to allow editing of table
 	renderEditable(cellInfo) {
-		console.log(`Cell info:`, cellInfo)
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
@@ -522,7 +550,37 @@ class Active extends React.Component {
         }}
       />
     );
-  }
+	}
+	
+	// Saving Edited Table 
+	updateEditedTableRow = (row) => {
+		const newRowColumn = {...row.original}
+		delete newRowColumn.updatedAt;
+		newRowColumn.name = newRowColumn.name.replace(/\s+/g,' ').trim();
+		const nameArray = newRowColumn.name.split(" ")
+		const firstName = newRowColumn.name.split(" ")[0]
+		const lastName = newRowColumn.name.split(" ")[1]
+		newRowColumn.first = firstName
+		newRowColumn.last = lastName
+		delete newRowColumn.name
+		console.log(newRowColumn)
+		GraphQL.query(UPDATE_DASHBOARD_INFO, {
+			id: parseInt(newRowColumn.personId),
+			parameter: {
+				...newRowColumn 
+			}
+		})
+		.catch(err => {
+			console.error(err)
+		})
+	}
+
+	// Deleting Updated Table 
+	deleteTableRow = (row) => {
+		console.log(row.original)
+	}
+
+
 
 	render() {
 		//Make change in the data part of the react table
@@ -603,8 +661,25 @@ class Active extends React.Component {
 			Header: 'Source',
 			accessor: d => d.source === EnumSource.OTHER ? d.sourceCustom : EnumSource[d.source],
 			style:{textAlign:'center'}
-
-		}]
+		}, 
+		{
+			id:'edit',
+			Header: 'Edit',
+			Cell: row => (
+					<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
+							<button style={{color: 'white', backgroundColor:'#FFC107', borderRadius: "2px"}} onClick={() => this.updateEditedTableRow(row)}>Edit</button>
+					</div>
+			)
+	 }]
+// 	 {
+// 		id:'delete',
+// 		Header: 'Delete',
+// 		Cell: row => (
+// 				<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
+// 						<button style={{color: 'white', backgroundColor:'#F44336', borderRadius: "2px"}} onClick={() => this.deleteTableRow(row)}>Delete</button>
+// 				</div>
+// 		)
+//  }]
 		
 		const SortedList = list_sort.length > 0 ? list_sort : list
 
@@ -715,7 +790,8 @@ class Active extends React.Component {
 						showPagination={false}
 						minRows={10}
 						noDataText='Nothing here'
-						style={{borderRadius:10,marginTop:15}} />
+						style={{borderRadius:10,marginTop:15}}
+						getTrProps={this.onRowClick} />
 				</>)
 					:
 					(<div> 			
