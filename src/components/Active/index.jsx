@@ -687,7 +687,7 @@ class Active extends React.Component {
 					</Popover>
 				      <TextField
 						id="standard-bare"
-						placeholder="Search Anything In Dashboard"
+						placeholder="Search anything in dashboard"
 						margin="normal"
 						inputProps={{}}
 						InputProps={{
@@ -729,19 +729,19 @@ class Active extends React.Component {
 						{this.state.typeOfGraph === 'Pie' ? (		
 								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 									<div>
-										<h3> Souce Info</h3>
+										<h3> Networking Source Diversity</h3>
 										<PieGraph 
 										graphData={sourceInfo}
 										/>
 									</div>
 									<div>
-										<h3>Company Info</h3>
+										<h3>Contact Diversity</h3>
 										<PieGraph 
 										graphData={companyInfo}
 										/>
 									</div>
 									<div>
-										<h3>Activity Info</h3>
+										<h3>Networking Effectiveness</h3>
 										<PieGraph 
 										graphData={activityInfo}
 										/>
@@ -753,19 +753,19 @@ class Active extends React.Component {
 					{this.state.typeOfGraph === 'Bar' ? (	
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 						<div>
-						<h3>Souce Info</h3>
+						<h3>Networking Source  Diversity</h3>
 							<BarGraph
 							graphData={sourceInfo}
 							/>
 						</div>
 						<div>
-							<h3>Company Info</h3>
+							<h3>Contact Diversity</h3>
 							<BarGraph
 							graphData={companyInfo}
 							/>
 					</div>
 					<div>
-							<h3>Activity Info</h3>
+							<h3>Network Effectiveness</h3>
 							<BarGraph
 							graphData={activityInfo}
 							/>
@@ -777,21 +777,27 @@ class Active extends React.Component {
 					{this.state.typeOfGraph === 'Table' ? (	
 							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
 								<div>
-								<h3>Souce Info</h3>
+								<h3>Network Source  Diversity</h3>
 								<GraphTableCreator
 										graphData={sourceInfo}
+										tableHeadingValue="Value"
+										tableHeadingKey="Network Source"
 									/>
 								</div>
 								<div>
-								<h3>Company Info</h3>
+								<h3> Contact Diversity</h3>
 									<GraphTableCreator
 										graphData={companyInfo}
+										tableHeadingValue="Value"
+										tableHeadingKey="Contact Company"
 									/>
 								</div>
 								<div>
-								<h3>Activity Info</h3>
+								<h3>Networking Effectiveness</h3>
 									<GraphTableCreator
 										graphData={activityInfo}
+										tableHeadingValue="Value"
+										tableHeadingKey="Activity"
 									/>
 								</div>
 							</div>
@@ -813,7 +819,7 @@ class Active extends React.Component {
 							/>
 
 							<VictoryAxis tickFormat={() => ''} 
-							label="Daily Activity due"/>	
+							label="Daily Activity Due"/>	
 							
 						<VictoryLine
 							data={dayValue}
@@ -869,7 +875,7 @@ class Active extends React.Component {
 								/>
 
 								<VictoryAxis tickFormat={() => ''} 
-								label="Monthly Activity due"/>	
+								label="Monthly Activity Due"/>	
 								
 							<VictoryLine
 								data={monthlyValue}
