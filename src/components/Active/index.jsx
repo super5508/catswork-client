@@ -83,7 +83,6 @@ const DeleteEntireLinkedinProfileData = gql`
 
 @observer
 class Active extends React.Component {
-
 	constructor(props){
 		super(props);
 		this.renderEditable = this.renderEditable.bind(this)
@@ -119,7 +118,6 @@ class Active extends React.Component {
 					people.name = people.first + " " + people.last
 					return people
 				})
-				console.log(this._$people )
 				this.setState({data_table: this._$people})
 			}))
 
@@ -667,7 +665,7 @@ class Active extends React.Component {
 			Header: 'Edit',
 			Cell: row => (
 					<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
-							<button style={{color: 'white', backgroundColor:'#FFC107', borderRadius: "2px"}} onClick={() => this.updateEditedTableRow(row)}>Edit</button>
+							<button style={{color: 'white', backgroundColor:'#ef5350', borderRadius: "2px"}} onClick={() => this.updateEditedTableRow(row)}>Save Edited</button>
 					</div>
 			)
 	 }]
@@ -841,7 +839,7 @@ class Active extends React.Component {
 							/>
 					</div>
 					<div>
-							<h3>Network Effectiveness</h3>
+							<h3>Networking Effectiveness</h3>
 							<BarGraph
 							graphData={activityInfo}
 							/>
@@ -853,11 +851,11 @@ class Active extends React.Component {
 					{this.state.typeOfGraph === 'Table' ? (	
 							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
 								<div>
-								<h3>Network Source  Diversity</h3>
+								<h3>Network</h3>
 								<GraphTableCreator
 										graphData={sourceInfo}
 										tableHeadingValue="Value"
-										tableHeadingKey="Network Source"
+										tableHeadingKey="Network"
 									/>
 								</div>
 								<div>
@@ -883,7 +881,7 @@ class Active extends React.Component {
 					}
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
-							<h3>Daily Activity</h3>
+							<h3>Daily Activities</h3>
 						<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -912,7 +910,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-					<h3>Weekly Activity</h3>
+					<h3>Weekly Activities</h3>
 				<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -940,7 +938,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-						<h3>Monthly Activity</h3>
+						<h3>Monthly Activitie</h3>
 				<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}
