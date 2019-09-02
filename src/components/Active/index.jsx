@@ -890,7 +890,7 @@ class Active extends React.Component {
 					}
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
-							<h3 style={{textAlign: 'center'}}>Daily Activities</h3>
+							<h3 style={{textAlign: 'center'}}>Daily Activities (Next 30 Days)</h3>
 						<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -919,7 +919,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-					<h3  style={{textAlign: 'center'}}>Weekly Activities</h3>
+					<h3  style={{textAlign: 'center'}}>Weekly Activities (Next 4 Weeks)</h3>
 				<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -947,7 +947,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-						<h3  style={{textAlign: 'center'}}>Monthly Activities</h3>
+						<h3  style={{textAlign: 'center'}}>Monthly Activities (Next 12 Months)</h3>
 				<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}
