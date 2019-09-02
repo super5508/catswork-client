@@ -74,7 +74,7 @@ const UPDATE_DASHBOARD_INFO = gql`
 `
 
 const DeleteEntireLinkedinProfileData = gql`
- mutation DeleteEntireLinkedinProfileData($id: Int!, $parameter: request_success!) {
+ mutation DeleteEntireLinkedinProfileData($id: Int!) {
 	DeleteEntireLinkedinProfileData(id: $id) {
 		id
 	}
@@ -510,18 +510,6 @@ class Active extends React.Component {
 		})
 	}
 
-// 	onRowClick = (state, rowInfo, column, instance) => {
-//     return {
-//         onClick: e => {
-//             console.log('A Td Element was clicked!')
-//             console.log('it produced this event:', e)
-//             console.log('It was in this column:', column)
-//             console.log('It was in this row:', rowInfo)
-//             console.log('It was in this table instance:', instance)
-//         }
-//     }
-// }
-
 	sortTickValues = (values) => {
 		const formattedArray = []
 		values.forEach(value => {
@@ -575,7 +563,27 @@ class Active extends React.Component {
 
 	// Deleting Updated Table 
 	deleteTableRow = (row) => {
-		console.log(row.original)
+		const that = this
+		const newRowColumn = {...row.original}
+		GraphQL.query(DeleteEntireLinkedinProfileData, {
+			id: parseInt(newRowColumn.personId)
+		}).then(() => {
+		GraphQL.query(PEOPLE_QUERY)
+		.then(action(({ data }) => {
+			this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
+				people.name = people.first + " " + people.last
+				return people
+			})
+			this.setState({data_table: this._$people})
+		}))
+		GraphQL.query(USER_QUERY)
+		.then(({ data }) => {
+			this.setState({user_activity: data.catWorksPersonal.userActivity})
+		})
+		})
+		.catch(err => {
+			console.error(err)
+		})
 	}
 
 
@@ -662,22 +670,22 @@ class Active extends React.Component {
 		}, 
 		{
 			id:'edit',
-			Header: 'Edit',
+			Header: 'Save Edits',
 			Cell: row => (
 					<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
-							<button style={{color: 'white', backgroundColor:'#ef5350', borderRadius: "2px"}} onClick={() => this.updateEditedTableRow(row)}>Save Edited</button>
+							<button style={{color: 'white', backgroundColor:'#ef5350', borderRadius: "2px"}} onClick={() => this.updateEditedTableRow(row)}>Save</button>
 					</div>
 			)
-	 }]
-// 	 {
-// 		id:'delete',
-// 		Header: 'Delete',
-// 		Cell: row => (
-// 				<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
-// 						<button style={{color: 'white', backgroundColor:'#F44336', borderRadius: "2px"}} onClick={() => this.deleteTableRow(row)}>Delete</button>
-// 				</div>
-// 		)
-//  }]
+	 },
+	 {
+		id:'delete',
+		Header: 'Delete',
+		Cell: row => (
+				<div style={{display: 'flex', justifyContent: 'row', justifyContent: 'center', }}>
+						<button style={{color: 'white', backgroundColor:'#F44336', borderRadius: "2px"}} onClick={() => this.deleteTableRow(row)}>Delete</button>
+				</div>
+		)
+ }]
 		
 		const SortedList = list_sort.length > 0 ? list_sort : list
 
@@ -803,19 +811,19 @@ class Active extends React.Component {
 						{this.state.typeOfGraph === 'Pie' ? (		
 								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 									<div>
-										<h3> Networking Source Diversity</h3>
+										<h3 style={{textAlign: 'center'}}> Networking Source Diversity</h3>
 										<PieGraph 
 										graphData={sourceInfo}
 										/>
 									</div>
 									<div>
-										<h3>Contact Diversity</h3>
+										<h3 style={{textAlign: 'center'}}>Contact Diversity</h3>
 										<PieGraph 
 										graphData={companyInfo}
 										/>
 									</div>
 									<div>
-										<h3>Networking Effectiveness</h3>
+										<h3 style={{textAlign: 'center'}}>Networking Effectiveness</h3>
 										<PieGraph 
 										graphData={activityInfo}
 										/>
@@ -827,7 +835,7 @@ class Active extends React.Component {
 					{this.state.typeOfGraph === 'Bar' ? (	
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
 						<div>
-						<h3>Networking Source  Diversity</h3>
+						<h3 style={{textAlign: 'center'}}>Networking Source  Diversity</h3>
 							<BarGraph
 							graphData={sourceInfo}
 							/>
@@ -839,7 +847,7 @@ class Active extends React.Component {
 							/>
 					</div>
 					<div>
-							<h3>Networking Effectiveness</h3>
+							<h3 style={{textAlign: 'center'}}>Networking Effectiveness</h3>
 							<BarGraph
 							graphData={activityInfo}
 							/>
@@ -851,15 +859,15 @@ class Active extends React.Component {
 					{this.state.typeOfGraph === 'Table' ? (	
 							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
 								<div>
-								<h3>Network</h3>
+								<h3 style={{textAlign: 'center'}}> Networking Source Diversity</h3>
 								<GraphTableCreator
 										graphData={sourceInfo}
 										tableHeadingValue="Value"
-										tableHeadingKey="Network"
+										tableHeadingKey="Networking Source"
 									/>
 								</div>
 								<div>
-								<h3> Contact Diversity</h3>
+								<h3 style={{textAlign: 'center'}}> Contact Diversity</h3>
 									<GraphTableCreator
 										graphData={companyInfo}
 										tableHeadingValue="Value"
@@ -867,7 +875,7 @@ class Active extends React.Component {
 									/>
 								</div>
 								<div>
-								<h3>Networking Effectiveness</h3>
+								<h3 style={{textAlign: 'center'}}>Networking Effectiveness</h3>
 									<GraphTableCreator
 										graphData={activityInfo}
 										tableHeadingValue="Value"
@@ -881,7 +889,7 @@ class Active extends React.Component {
 					}
 						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
-							<h3>Daily Activities</h3>
+							<h3 style={{textAlign: 'center'}}>Daily Activities</h3>
 						<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -910,7 +918,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-					<h3>Weekly Activities</h3>
+					<h3  style={{textAlign: 'center'}}>Weekly Activities</h3>
 				<VictoryChart
 							theme={VictoryTheme.material}
 							minDomain={{ y: 0 }}
@@ -938,7 +946,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-						<h3>Monthly Activitie</h3>
+						<h3  style={{textAlign: 'center'}}>Monthly Activitie</h3>
 				<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}

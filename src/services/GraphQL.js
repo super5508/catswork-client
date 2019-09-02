@@ -13,7 +13,6 @@ const gql = (template) => {
 //Making request
 class GraphQL {
 	static query(query, variables = undefined) {
-		console.log(JSON.stringify({ query, variables }))
 		return axios({
 			method: 'POST',
 			url: `${config.server.url}${config.server.graphQLPath}`,
