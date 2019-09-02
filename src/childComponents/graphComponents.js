@@ -25,6 +25,29 @@ export const PieGraph = (props) => {
   )
 }
 
+export const PieGraphCompany = (props) => {
+  return (
+    <VictoryPie
+    data={props.graphData}
+    radius={100}
+    containerComponent={<VictoryContainer responsive={false}/>}
+    style={{
+      labels: {
+        fontSize: 15
+      }
+    }}
+    animate={{
+      duration: 2000,
+      onLoad: { duration: 1000 }
+    }}
+    labels={(d) => {
+      const formatingLabel = d.x.split('_').join(" ")
+      return " "
+    }}
+  />
+  )
+}
+
 export const BarGraph = (props) => {
   return (
     <VictoryChart
@@ -32,6 +55,29 @@ export const BarGraph = (props) => {
     width={400}
     containerComponent={<VictoryContainer responsive={false}/>}
   >
+  <VictoryBar
+    alignment="start"
+    data={props.graphData}
+    style={{ data: { fill:  "#FF7043" } }}
+    animate={{
+      duration: 2000,
+      onLoad: { duration: 1000 }
+    }}
+    />
+  </VictoryChart>
+  )
+}
+
+export const BarGraphCompany = (props) => {
+  return (
+    <VictoryChart
+    height={400}
+    width={400}
+    containerComponent={<VictoryContainer responsive={false}/>}
+  >
+    		<VictoryAxis tickFormat={() => ''} 
+				label=" "/>
+
   <VictoryBar
     alignment="start"
     data={props.graphData}

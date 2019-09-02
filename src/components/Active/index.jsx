@@ -25,7 +25,7 @@ import Check from '@material-ui/icons/Check';
 import ButtonMaterial from '@material-ui/core/Button';
 import { flexbox } from '@material-ui/system';
 import { fixStringValues } from "./../../helperFunction/commonFunctions"
-import { PieGraph, BarGraph } from "./../../childComponents/graphComponents"
+import { PieGraph, BarGraph, BarGraphCompany, PieGraphCompany } from "./../../childComponents/graphComponents"
 import { GraphTableCreator } from "./../../childComponents/tableCreator"
 let found = []
 
@@ -163,7 +163,6 @@ class Active extends React.Component {
 	}
 
 
-
 	sortingDataForGraph= (propertyKey,  data) => {
 	let individualDataObj = {}
 	const filteredData = []
@@ -181,6 +180,7 @@ class Active extends React.Component {
 			y:individualDataObj[key],
 		})
 	})
+
 	return filteredData	
 }
 
@@ -597,6 +597,7 @@ class Active extends React.Component {
 		// --- Graph Source 
 		const sourceInfo = this.sortingDataForGraph('source', this.state.data_table)
 		const companyInfo = this.sortingDataForGraph('company', this.state.data_table)
+		console.log(this.state.user_activity)
 		const activityInfo = this.sortingDataForGraph('activity', this.state.user_activity)
 		// ---
 		let content = null
@@ -809,7 +810,7 @@ class Active extends React.Component {
 						</div> 
 					{/* Bar */}
 						{this.state.typeOfGraph === 'Pie' ? (		
-								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
+								<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 									<div>
 										<h3 style={{textAlign: 'center'}}> Networking Source Diversity</h3>
 										<PieGraph 
@@ -818,7 +819,7 @@ class Active extends React.Component {
 									</div>
 									<div>
 										<h3 style={{textAlign: 'center'}}>Contact Diversity</h3>
-										<PieGraph 
+										<PieGraphCompany
 										graphData={companyInfo}
 										/>
 									</div>
@@ -833,7 +834,7 @@ class Active extends React.Component {
 					: null}
 					{/* Bar */}
 					{this.state.typeOfGraph === 'Bar' ? (	
-						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw"}}>
+						<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around'}}>
 						<div>
 						<h3 style={{textAlign: 'center'}}>Networking Source  Diversity</h3>
 							<BarGraph
@@ -842,7 +843,7 @@ class Active extends React.Component {
 						</div>
 						<div>
 							<h3  style={{textAlign: 'center'}}> Contact Diversity</h3>
-							<BarGraph
+							<BarGraphCompany
 							graphData={companyInfo}
 							/>
 					</div>
@@ -857,7 +858,7 @@ class Active extends React.Component {
 
 					{/* Table */}
 					{this.state.typeOfGraph === 'Table' ? (	
-							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', width:"100vw", marginBottom: 25, marginTop: 25}}>
+							<div style={{display: "flex", flexDirection: "row", justifyContent: 'space-around', marginBottom: 25, marginTop: 25}}>
 								<div>
 								<h3 style={{textAlign: 'center'}}> Networking Source Diversity</h3>
 								<GraphTableCreator
@@ -879,7 +880,7 @@ class Active extends React.Component {
 									<GraphTableCreator
 										graphData={activityInfo}
 										tableHeadingValue="Value"
-										tableHeadingKey="Activity"
+										tableHeadingKey="Networking Activity"
 									/>
 								</div>
 							</div>
@@ -946,7 +947,7 @@ class Active extends React.Component {
 				</VictoryChart>
 				</div>
 				<div>
-						<h3  style={{textAlign: 'center'}}>Monthly Activitie</h3>
+						<h3  style={{textAlign: 'center'}}>Monthly Activities</h3>
 				<VictoryChart
 						theme={VictoryTheme.material}
 						minDomain={{ y: 0 }}
