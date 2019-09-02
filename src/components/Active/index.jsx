@@ -178,7 +178,7 @@ class Active extends React.Component {
 	Object.keys(individualDataObj).forEach(key => {
 		filteredData.push({
 			x: fixStringValues(key),
-			y:individualDataObj[key]
+			y:individualDataObj[key],
 		})
 	})
 	return filteredData	
@@ -841,7 +841,7 @@ class Active extends React.Component {
 							/>
 						</div>
 						<div>
-							<h3>Contact Diversity</h3>
+							<h3  style={{textAlign: 'center'}}> Contact Diversity</h3>
 							<BarGraph
 							graphData={companyInfo}
 							/>
