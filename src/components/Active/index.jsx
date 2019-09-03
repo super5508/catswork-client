@@ -4,7 +4,7 @@ import React from 'react'
 import ReactTable from 'react-table'
 import ReactDOM from 'react-dom';
 import { VictoryPie, VictoryLine, VictoryChart, VictoryTheme, VictoryPolarAxis,  VictoryAxis, VictoryContainer, VictoryBar } from "victory";
-import { EnumIndustry, EnumSource } from 'models/enums'
+import { EnumIndustry, EnumSource,  EnumActivities  } from 'models/enums'
 import GraphQL, { gql } from 'services/GraphQL'
 import Nav from 'components/Nav'
 import Loading from 'ui/Loading'
@@ -27,6 +27,7 @@ import { flexbox } from '@material-ui/system';
 import { fixStringValues } from "./../../helperFunction/commonFunctions"
 import { PieGraph, BarGraph, BarGraphCompany, PieGraphCompany } from "./../../childComponents/graphComponents"
 import { GraphTableCreator } from "./../../childComponents/tableCreator"
+
 let found = []
 
 const PEOPLE_QUERY = gql`
@@ -81,6 +82,13 @@ const DeleteEntireLinkedinProfileData = gql`
  }
 `
 
+// COLD_EMAIL: 'Cold email',
+	// EMAIL_FOLLOW_UP: 'Email follow-up',
+	// PHONE_CALL: 'Phone call',
+	// COFFEE_CHAT: 'Coffee chat',
+	// RE_CONNECT: 'Re-connect',
+	// ASK_FOR_REFERRAL: 'Asked for referral',
+	// OTHER: 'Other'
 @observer
 class Active extends React.Component {
 	constructor(props){
@@ -163,24 +171,36 @@ class Active extends React.Component {
 	}
 
 
-	sortingDataForGraph= (propertyKey,  data) => {
+	sortingDataForGraph= (propertyKey,  data, enumType) => {
 	let individualDataObj = {}
 	const filteredData = []
 	for (let i=0; i<data.length; i++) {
-		const nameInLowerCase = data[i][propertyKey].toLowerCase()
-		if (individualDataObj.hasOwnProperty(nameInLowerCase)) {
-			individualDataObj[nameInLowerCase] = individualDataObj[nameInLowerCase] + 1
+		const nameOfProperty = data[i][propertyKey]
+		if (individualDataObj.hasOwnProperty(nameOfProperty)) {
+			individualDataObj[nameOfProperty] = individualDataObj[nameOfProperty] + 1
 		} else {
-			individualDataObj[nameInLowerCase] = 1 
+			individualDataObj[nameOfProperty] = 1 
 		}
 	}
-	Object.keys(individualDataObj).forEach(key => {
-		filteredData.push({
-			x: fixStringValues(key),
-			y:individualDataObj[key],
+	if(enumType) {
+		Object.keys(enumType).forEach(parentKey => {
+			Object.keys(individualDataObj).forEach(key => {	
+				if (parentKey == key ) {
+					filteredData.push({
+						x: enumType[parentKey],
+						y:individualDataObj[key],
+					})
+				}
+			})
 		})
-	})
-
+	} else {
+		Object.keys(individualDataObj).forEach(key => {	
+			filteredData.push({
+				x: fixStringValues(key),
+				y:individualDataObj[key],
+			})
+		})
+	}
 	return filteredData	
 }
 
@@ -519,6 +539,9 @@ class Active extends React.Component {
 		return sortedArray
 	}
 
+	
+
+
 	// Funtions to allow editing of table
 	renderEditable(cellInfo) {
     return (
@@ -549,7 +572,6 @@ class Active extends React.Component {
 		newRowColumn.first = firstName
 		newRowColumn.last = lastName
 		delete newRowColumn.name
-		console.log(newRowColumn)
 		GraphQL.query(UPDATE_DASHBOARD_INFO, {
 			id: parseInt(newRowColumn.personId),
 			parameter: {
@@ -595,10 +617,9 @@ class Active extends React.Component {
 		const weeklyValue = this.activityTime("weekly")
 		const monthlyValue = this.activityTime('monthly')
 		// --- Graph Source 
-		const sourceInfo = this.sortingDataForGraph('source', this.state.data_table)
+		const sourceInfo = this.sortingDataForGraph('source', this.state.data_table, EnumSource)
 		const companyInfo = this.sortingDataForGraph('company', this.state.data_table)
-		console.log(this.state.user_activity)
-		const activityInfo = this.sortingDataForGraph('activity', this.state.user_activity)
+		const activityInfo = this.sortingDataForGraph('activity', this.state.user_activity, EnumActivities)
 		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
