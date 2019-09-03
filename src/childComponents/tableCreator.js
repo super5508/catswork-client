@@ -20,8 +20,8 @@ export const GraphTableCreator = (props) => {
     }}>
     {props.graphData.map((el, index) => (
       <tr>
-        <td style={{ textAlign:"left", padding: 15, width:200, backgroundColor: index % 2 === 0 ? 'white' : '#FFCCBC'}}>{fixStringValues(el.x)}</td>
-        <td style={{ textAlign:"center", padding: 15, width:100, backgroundColor: index % 2 === 0 ? 'white' : '#FFCCBC'}}>{el.y}</td>
+        <td style={{borderBottom: "1px solid black",  textAlign:"left", padding: 15, width:200, backgroundColor: index % 2 === 0 ? 'white' : '#FFCCBC'}}>{fixStringValues(el.x)}</td>
+        <td style={{borderBottom: "1px solid black", textAlign:"center", padding: 15, width:100, backgroundColor: index % 2 === 0 ? 'white' : '#FFCCBC'}}>{el.y}</td>
       </tr>
     ))}
     </tbody>
