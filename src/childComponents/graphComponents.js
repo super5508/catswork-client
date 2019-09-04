@@ -75,8 +75,12 @@ export const BarGraphCompany = (props) => {
     width={400}
     containerComponent={<VictoryContainer responsive={false}/>}
   >
-    		<VictoryAxis tickFormat={() => ''} 
-				label=" "/>
+    <VictoryAxis tickFormat={() => ''} 
+			label=" "/>
+    
+    <VictoryAxis dependentAxis 
+				tickValues={props.graphData.map(axis => axis.y)}
+			/>
 
   <VictoryBar
     alignment="start"

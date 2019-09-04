@@ -15,8 +15,9 @@ export const GraphTableCreator = (props) => {
       <tbody style={{
         display: "block",
       height: "300px",       
-      overflowY: "auto",    
-      overflowX: "hidden"  
+      overflowY: "scroll",    
+      overflowX: "hidden" ,
+      overflow: "scroll"
     }}>
     {props.graphData.map((el, index) => (
       <tr>
