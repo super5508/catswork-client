@@ -28,8 +28,28 @@ import { fixStringValues } from "./../../helperFunction/commonFunctions"
 import { PieGraph, BarGraph, BarGraphCompany, PieGraphCompany } from "./../../childComponents/graphComponents"
 import { GraphTableCreator } from "./../../childComponents/tableCreator"
 
-let found = []
 
+
+const dummyData123 = [{
+company: "Spaceyfi",
+education: "Bachelors",
+email: "irohitbhatia@gmail.com",
+extracurriculars: null,
+first: "Rohit",
+hometown: "India",
+industry: "AGR",
+last: "Bhatia",
+location: "India",
+name: "Rohit Bhatia",
+notes: null,
+personId: 22,
+phone: "8810560137",
+position: "Founder",
+source: "INFO_SESSION",
+sourceCustom: "",
+updatedAt: "1566446399000",
+website: null
+}]
 const PEOPLE_QUERY = gql`
 	query userRootQueryType {
 		catWorksDashboard {
@@ -123,11 +143,11 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.catWorksDashboard.map(people => {
+				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
 					people.name = people.first + " " + people.last
 					return people
 				})
-				this.setState({data_table: this._$people})
+				this.setState({data_table: this._$people, data_display: this._$people})
 			}))
 
 			GraphQL.query(USER_QUERY)
@@ -138,21 +158,22 @@ class Active extends React.Component {
 
 
 	renderEditable(cellInfo) {
-    return (
-      <div
-        style={{ backgroundColor: "#fafafa" }}
-        contentEditable
-        suppressContentEditableWarning
-        onBlur={e => {
-          const data = [...this.state.data];
-          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-          this.setState({ data });
-        }}
-        dangerouslySetInnerHTML={{
-          __html: this.state.data[cellInfo.index][cellInfo.column.id]
-        }}
-      />
-    );
+    // return (
+    //   <div
+    //     style={{ backgroundColor: "#fafafa" }}
+    //     contentEditable
+    //     suppressContentEditableWarning
+    //     onBlur={e => {
+
+    //       const data = [...this.state.data];
+    //       data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+    //       this.setState({ data });
+    //     }}
+    //     dangerouslySetInnerHTML={{
+    //       __html: this.state.data[cellInfo.index][cellInfo.column.id]
+    //     }}
+    //   />
+    // );
 	}
 	
 	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
@@ -172,7 +193,7 @@ class Active extends React.Component {
 	}
 
 
-	sortingDataForGraph= (propertyKey,  data, enumType) => {
+sortingDataForGraph= (propertyKey,  data, enumType) => {
 	let individualDataObj = {}
 	const filteredData = []
 	for (let i=0; i<data.length; i++) {
@@ -233,179 +254,60 @@ class Active extends React.Component {
 
 
 
-
 	handleChangeSearchText = (text) => {
+		const entiretableData = this._$people 
+		const found = []
 		const {data_table,sortingpanel} = this.state;
 		//Change here data_table to this._$people 
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
-		this.setState({
-			searchtext:text
-		},()=>{
-			if(this.state.searchtext.length === 0 || this.state.searchtext.length === 1){
+		if(text.length === 0 || text.length === 1){
 				this.setState({
-					searchpanel:[]
+					data_display:entiretableData
 				})
 			}
-			if(this.state.searchtext.length > 1){
-				found=[]
-				let x=0
-				let i=0
-			  x = this.state.searchtext.length
-			  data_display.forEach((tile)=>{
-				if(x>0 && tile.first !== '' && tile.first != null){
-				  let j = tile.first.length
-				  let mnx = tile.first.replace(/[^a-zA-Z0-9 ]/g, "")
-				  for(i=0;i<j;i++){
-					if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-					  found.push(tile)
+		if(text.length > 1){
+			const x = text.length
+			data_display.forEach((tile)=>{
+				Object.values(tile).forEach((tileValue) => {
+					if (x>0 && tileValue !== '' && tileValue !=null && typeof tileValue === 'string') {
+						const j = tileValue.length
+						const mnx = tileValue.replace(/[^a-zA-Z0-9 ]/g, "")
+						for(let i=0;i<j;i++){
+							if(mnx.substr(i,x).toLowerCase() === text.toLowerCase()){
+								found.push(tile)
+							}
+						}
 					}
-				  }
-				}
-
-				if(x>0 && tile.last !== '' && tile.last != null){
-					let j = tile.last.length
-					let mnx = tile.last.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.hometown !== '' && tile.hometown !== null){
-				
-					let j = tile.hometown.length
-					let mnx = tile.hometown.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.industry !== '' && tile.industry !== null){
-					let j = tile.industry.length
-					let mnx = tile.industry.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.company !== '' && tile.company !== null){
-					let j = tile.company.length
-					let mnx = tile.company.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.email !== '' && tile.email !== null){
-					let j = tile.email.length
-					let mnx = tile.email.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.position !== '' &&  tile.position != null){
-					let j = tile.position.length
-					let mnx = tile.position.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.location !== '' && tile.location != null){
-					let j = tile.location.length
-					let mnx = tile.location.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.education !== '' && tile.education != null){
-					let j = tile.education.length
-					let mnx = tile.education.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x).toLowerCase() === this.state.searchtext.toLowerCase()){
-						found.push(tile)
-					  }
-					}
-				  }
-
-				  if(x>0 && tile.phone !== '' && tile.phone !== null){
-					let j = tile.phone.length
-					let mnx = tile.phone.replace(/[^a-zA-Z0-9 ]/g, "")
-					for(i=0;i<j;i++){
-					  if(mnx.substr(i,x) === this.state.searchtext){
-						found.push(tile)
-					  }
-					}
-				  }
-			  })
-			  let unique=[]
-			  //Sort uniquely the different objects based on the key name
-			  if(found.length >0){
-				unique = _.uniqBy(found,'first')
-				}
-			  this.setState({
-				searchpanel:unique,
-			  })
-			} 
-		  })
+				})
+			})
+			const unique=  _.uniqBy(found,'first')
+			this.setState({
+				data_display:unique,
+			})
+		} 
 	}
+	
 
 	handleChangePopoverText = (text) => {
-
+		const found = []
 		const {list} = this.state;
-
-		this.setState({
-			filterText:text
-		},()=>{
-			if(this.state.filterText.length === 0){
-				this.setState({
-					list_sort:[]
-				})
-			}
-			if(this.state.filterText.length === 1){
-				this.setState({
-					list_sort:[]
-				})
-			}
-			if(this.state.filterText.length > 1){
-			found=[]
-			let x=0
+		if(this.text.length > 1){
+				const x =  this.text.length
 			  let i=0
-			  x = this.state.filterText.length
 			  list.forEach((tile)=>{
-				if(x>0 && tile !== ''){
-				  let j = tile.value.length
-				  let mnx = tile.value.replace(/[^a-zA-Z ]/g, "")
-				  for(i=0;i<j;i++){
-					if(mnx.substr(i,x).toLowerCase() === this.state.filterText.toLowerCase()){
-					  found.push(tile)
+					if(x>0 && tile !== ''){
+						const j = tile.value.length
+						const mnx = tile.value.replace(/[^a-zA-Z ]/g, "")
+						for(i=0;i<j;i++){
+							if(mnx.substr(i,x).toLowerCase() === this.text.toLowerCase()){
+								found.push(tile)
+							}
+						}
 					}
-				  }
-				}
 			  })
-
-			  let unique = _.uniqBy(found,'value')
-	
-			  this.setState({
-				list_sort:unique,
-			  })
-			} 
-		  })
+			  const unique = _.uniqBy(found,'value')
+			  this.setState({list_sort:unique})
+		} 
 	}
 
 	openModal =() => {
@@ -538,18 +440,17 @@ class Active extends React.Component {
 
 	// Funtions to allow editing of table
 	renderEditable(cellInfo) {
+		console.log(`Cell info:`, cellInfo)
+		const findingValue = cellInfo.original.personId
+		const findInnerHtmLobj = _.find(this.state.data_table, {personId: findingValue})
+		const innerHtmlObj = findInnerHtmLobj[cellInfo.column.id]
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
         contentEditable
         suppressContentEditableWarning
-        onBlur={e => {
-          const data = [...this.state.data_table];
-          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-          this.setState({ data });
-        }}
         dangerouslySetInnerHTML={{
-          __html: this.state.data_table[cellInfo.index][cellInfo.column.id]
+          __html: innerHtmlObj
         }}
       />
     );
@@ -617,6 +518,7 @@ class Active extends React.Component {
 		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
+		// const {sortingpanel, anchorEl} = this.state
 		const COLUMNS = [{
 			id: 'name',
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'first')}><span>Name</span> <span className={s.columnIconAlignment}><FilterList  style={{height:15,width:15,float:'right'}} /></span></div>,
@@ -702,16 +604,7 @@ class Active extends React.Component {
 				</div>
 		)
  }]
-		
-		const SortedList = list_sort.length > 0 ? list_sort : list
-
-
-		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
-		if(searchpanel.length > 0){
-			data_display = [...searchpanel]
-		}
-
-		const open = Boolean(anchorEl)
+ 	const open = Boolean(anchorEl)
 		if (this._$people === null) {
 			content = <Loading />
 		}
@@ -723,7 +616,6 @@ class Active extends React.Component {
 				<>
 					<Popover
 						open={open}
-						anchorEl={anchorEl}
 						onClose={() => this.closeModal()}
 						anchorOrigin={{
 						vertical: 'bottom',
@@ -805,14 +697,14 @@ class Active extends React.Component {
 						Clear Sort
 					</ButtonMaterial>}
 					<ReactTable className={s.table}
-						data={[...data_display]}
+						data={this.state.data_display}
 						columns={COLUMNS}
 						filterable={false}
 						showPagination={false}
 						minRows={10}
 						noDataText='Nothing here'
 						style={{borderRadius:10,marginTop:15}}
-						getTrProps={this.onRowClick} />
+						 />
 				</>)
 					:
 					(<div> 			
