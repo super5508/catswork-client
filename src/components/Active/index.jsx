@@ -235,7 +235,6 @@ class Active extends React.Component {
 
 
 	handleChangeSearchText = (text) => {
-		console.log(`This is text`, text)
 		const {data_table,sortingpanel} = this.state;
 		//Change here data_table to this._$people 
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
@@ -714,6 +713,7 @@ class Active extends React.Component {
 		if(searchpanel.length > 0){
 			data_display = [...searchpanel]
 		}
+
 		const open = Boolean(anchorEl)
 		if (this._$people === null) {
 			content = <Loading />
