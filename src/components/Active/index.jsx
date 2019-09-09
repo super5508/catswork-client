@@ -358,9 +358,6 @@ class Active extends React.Component {
 			  if(found.length >0){
 				unique = _.uniqBy(found,'first')
 				}
-				
-				console.log(`This is unqiue`, unique)
-	
 			  this.setState({
 				searchpanel:unique,
 			  })
@@ -589,7 +586,7 @@ class Active extends React.Component {
 		}).then(() => {
 		GraphQL.query(PEOPLE_QUERY)
 		.then(action(({ data }) => {
-			this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
+			this._$people = data.catWorksDashboard.map(people => {
 				people.name = people.first + " " + people.last
 				return people
 			})
