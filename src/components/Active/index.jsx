@@ -28,28 +28,8 @@ import { fixStringValues } from "./../../helperFunction/commonFunctions"
 import { PieGraph, BarGraph, BarGraphCompany, PieGraphCompany } from "./../../childComponents/graphComponents"
 import { GraphTableCreator } from "./../../childComponents/tableCreator"
 
+let found = []
 
-
-const dummyData123 = [{
-company: "Spaceyfi",
-education: "Bachelors",
-email: "irohitbhatia@gmail.com",
-extracurriculars: null,
-first: "Rohit",
-hometown: "India",
-industry: "AGR",
-last: "Bhatia",
-location: "India",
-name: "Rohit Bhatia",
-notes: null,
-personId: 22,
-phone: "8810560137",
-position: "Founder",
-source: "INFO_SESSION",
-sourceCustom: "",
-updatedAt: "1566446399000",
-website: null
-}]
 const PEOPLE_QUERY = gql`
 	query userRootQueryType {
 		catWorksDashboard {
@@ -143,11 +123,11 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
+				this._$people = data.catWorksDashboard.map(people => {
 					people.name = people.first + " " + people.last
 					return people
 				})
-				this.setState({data_table: this._$people, data_display: this._$people})
+				this.setState({data_table: this._$people})
 			}))
 
 			GraphQL.query(USER_QUERY)
@@ -158,22 +138,21 @@ class Active extends React.Component {
 
 
 	renderEditable(cellInfo) {
-    // return (
-    //   <div
-    //     style={{ backgroundColor: "#fafafa" }}
-    //     contentEditable
-    //     suppressContentEditableWarning
-    //     onBlur={e => {
-
-    //       const data = [...this.state.data];
-    //       data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-    //       this.setState({ data });
-    //     }}
-    //     dangerouslySetInnerHTML={{
-    //       __html: this.state.data[cellInfo.index][cellInfo.column.id]
-    //     }}
-    //   />
-    // );
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
 	}
 	
 	createGraphObjforMonthAndWeekly = (graphPeriod, peopleActivityList) => {
@@ -193,7 +172,7 @@ class Active extends React.Component {
 	}
 
 
-sortingDataForGraph= (propertyKey,  data, enumType) => {
+	sortingDataForGraph= (propertyKey,  data, enumType) => {
 	let individualDataObj = {}
 	const filteredData = []
 	for (let i=0; i<data.length; i++) {
@@ -254,6 +233,7 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 
 
 
+
 	handleChangeSearchText = (text) => {
 		const entiretableData = this._$people 
 		const found = []
@@ -262,7 +242,7 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
 		if(text.length === 0 || text.length === 1){
 				this.setState({
-					data_display:entiretableData
+					searchpanel:[]
 				})
 			}
 		if(text.length > 1){
@@ -282,32 +262,52 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 			})
 			const unique=  _.uniqBy(found,'first')
 			this.setState({
-				data_display:unique,
+				searchpanel:unique,
 			})
 		} 
 	}
-	
 
 	handleChangePopoverText = (text) => {
-		const found = []
+
 		const {list} = this.state;
-		if(this.text.length > 1){
-				const x =  this.text.length
+
+		this.setState({
+			filterText:text
+		},()=>{
+			if(this.state.filterText.length === 0){
+				this.setState({
+					list_sort:[]
+				})
+			}
+			if(this.state.filterText.length === 1){
+				this.setState({
+					list_sort:[]
+				})
+			}
+			if(this.state.filterText.length > 1){
+			found=[]
+			let x=0
 			  let i=0
+			  x = this.state.filterText.length
 			  list.forEach((tile)=>{
-					if(x>0 && tile !== ''){
-						const j = tile.value.length
-						const mnx = tile.value.replace(/[^a-zA-Z ]/g, "")
-						for(i=0;i<j;i++){
-							if(mnx.substr(i,x).toLowerCase() === this.text.toLowerCase()){
-								found.push(tile)
-							}
-						}
+				if(x>0 && tile !== ''){
+				  let j = tile.value.length
+				  let mnx = tile.value.replace(/[^a-zA-Z ]/g, "")
+				  for(i=0;i<j;i++){
+					if(mnx.substr(i,x).toLowerCase() === this.state.filterText.toLowerCase()){
+					  found.push(tile)
 					}
+				  }
+				}
 			  })
-			  const unique = _.uniqBy(found,'value')
-			  this.setState({list_sort:unique})
-		} 
+
+			  let unique = _.uniqBy(found,'value')
+	
+			  this.setState({
+				list_sort:unique,
+			  })
+			} 
+		  })
 	}
 
 	openModal =() => {
@@ -438,7 +438,6 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 	
 
 
-	// Funtions to allow editing of table
 	renderEditable(cellInfo) {
 		console.log(`Cell info:`, cellInfo)
 		const findingValue = cellInfo.original.personId
@@ -448,7 +447,12 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
       <div
         style={{ backgroundColor: "#fafafa" }}
         contentEditable
-        suppressContentEditableWarning
+				suppressContentEditableWarning
+				 onBlur={e => {	    
+          const data = [...this.state.data];	
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;	   
+          this.setState({ data });	 
+        }}
         dangerouslySetInnerHTML={{
           __html: innerHtmlObj
         }}
@@ -518,7 +522,6 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 		// ---
 		let content = null
 		const {searchpanel,anchorEl,list,list_sort,data_table,sortingpanel} = this.state;
-		// const {sortingpanel, anchorEl} = this.state
 		const COLUMNS = [{
 			id: 'name',
 			Header: <div onClick={(event) => this.handleAnchorEl(event,'first')}><span>Name</span> <span className={s.columnIconAlignment}><FilterList  style={{height:15,width:15,float:'right'}} /></span></div>,
@@ -604,7 +607,16 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 				</div>
 		)
  }]
- 	const open = Boolean(anchorEl)
+		
+		const SortedList = list_sort.length > 0 ? list_sort : list
+
+
+		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
+		if(searchpanel.length > 0){
+			data_display = [...searchpanel]
+		}
+
+		const open = Boolean(anchorEl)
 		if (this._$people === null) {
 			content = <Loading />
 		}
@@ -616,6 +628,7 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 				<>
 					<Popover
 						open={open}
+						anchorEl={anchorEl}
 						onClose={() => this.closeModal()}
 						anchorOrigin={{
 						vertical: 'bottom',
@@ -697,14 +710,14 @@ sortingDataForGraph= (propertyKey,  data, enumType) => {
 						Clear Sort
 					</ButtonMaterial>}
 					<ReactTable className={s.table}
-						data={this.state.data_display}
+						data={[...data_display]}
 						columns={COLUMNS}
 						filterable={false}
 						showPagination={false}
 						minRows={10}
 						noDataText='Nothing here'
 						style={{borderRadius:10,marginTop:15}}
-						 />
+						getTrProps={this.onRowClick} />
 				</>)
 					:
 					(<div> 			
