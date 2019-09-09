@@ -109,7 +109,8 @@ class Active extends React.Component {
 			user_activity: [],
 			dataVisulatization: false, 
 			typeOfGraph: 'Table',
-			data: null
+			data: null, 
+			data_display: []
 		}
 	}
 
@@ -122,7 +123,7 @@ class Active extends React.Component {
 	componentWillMount() {
 		GraphQL.query(PEOPLE_QUERY)
 			.then(action(({ data }) => {
-				this._$people = data.catWorksDashboard.sort((a, b) => b.updatedAt - a.updatedAt).map(people => {
+				this._$people = data.catWorksDashboard.map(people => {
 					people.name = people.first + " " + people.last
 					return people
 				})
@@ -234,30 +235,25 @@ class Active extends React.Component {
 
 
 	handleChangeSearchText = (text) => {
+		console.log(`This is text`, text)
 		const {data_table,sortingpanel} = this.state;
 		//Change here data_table to this._$people 
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
 		this.setState({
 			searchtext:text
 		},()=>{
-			if(this.state.searchtext.length === 0){
-				this.setState({
-					searchpanel:[]
-				})
-			}
-			if(this.state.searchtext.length === 1){
+			if(this.state.searchtext.length === 0 || this.state.searchtext.length === 1){
 				this.setState({
 					searchpanel:[]
 				})
 			}
 			if(this.state.searchtext.length > 1){
-			found=[]
-			let x=0
-			  let i=0
+				found=[]
+				let x=0
+				let i=0
 			  x = this.state.searchtext.length
 			  data_display.forEach((tile)=>{
-				
-				if(x>0 && tile.first !== ''){
+				if(x>0 && tile.first !== '' && tile.first != null){
 				  let j = tile.first.length
 				  let mnx = tile.first.replace(/[^a-zA-Z0-9 ]/g, "")
 				  for(i=0;i<j;i++){
@@ -267,7 +263,7 @@ class Active extends React.Component {
 				  }
 				}
 
-				if(x>0 && tile.last !== ''){
+				if(x>0 && tile.last !== '' && tile.last != null){
 					let j = tile.last.length
 					let mnx = tile.last.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -277,7 +273,8 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.hometown !== ''){
+				  if(x>0 && tile.hometown !== '' && tile.hometown !== null){
+				
 					let j = tile.hometown.length
 					let mnx = tile.hometown.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -287,7 +284,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.industry !== ''){
+				  if(x>0 && tile.industry !== '' && tile.industry !== null){
 					let j = tile.industry.length
 					let mnx = tile.industry.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -297,7 +294,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.company !== ''){
+				  if(x>0 && tile.company !== '' && tile.company !== null){
 					let j = tile.company.length
 					let mnx = tile.company.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -307,7 +304,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.email !== ''){
+				  if(x>0 && tile.email !== '' && tile.email !== null){
 					let j = tile.email.length
 					let mnx = tile.email.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -317,7 +314,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.position !== ''){
+				  if(x>0 && tile.position !== '' &&  tile.position != null){
 					let j = tile.position.length
 					let mnx = tile.position.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -327,7 +324,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.location !== ''){
+				  if(x>0 && tile.location !== '' && tile.location != null){
 					let j = tile.location.length
 					let mnx = tile.location.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -337,7 +334,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.education !== ''){
+				  if(x>0 && tile.education !== '' && tile.education != null){
 					let j = tile.education.length
 					let mnx = tile.education.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -347,7 +344,7 @@ class Active extends React.Component {
 					}
 				  }
 
-				  if(x>0 && tile.phone !== ''){
+				  if(x>0 && tile.phone !== '' && tile.phone !== null){
 					let j = tile.phone.length
 					let mnx = tile.phone.replace(/[^a-zA-Z0-9 ]/g, "")
 					for(i=0;i<j;i++){
@@ -359,10 +356,11 @@ class Active extends React.Component {
 			  })
 			  let unique=[]
 			  //Sort uniquely the different objects based on the key name
-
 			  if(found.length >0){
 				unique = _.uniqBy(found,'first')
-			  }
+				}
+				
+				console.log(`This is unqiue`, unique)
 	
 			  this.setState({
 				searchpanel:unique,
@@ -711,17 +709,15 @@ class Active extends React.Component {
 		
 		const SortedList = list_sort.length > 0 ? list_sort : list
 
+
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
-
 		if(searchpanel.length > 0){
-			data_display = searchpanel
+			data_display = [...searchpanel]
 		}
-
 		const open = Boolean(anchorEl)
 		if (this._$people === null) {
 			content = <Loading />
 		}
-
 		else {
 			content = (
 				<section className={s.active}>
@@ -812,7 +808,7 @@ class Active extends React.Component {
 						Clear Sort
 					</ButtonMaterial>}
 					<ReactTable className={s.table}
-						data={data_display}
+						data={[...data_display]}
 						columns={COLUMNS}
 						filterable={false}
 						showPagination={false}
