@@ -439,7 +439,7 @@ class Active extends React.Component {
 
 
 	renderEditable(cellInfo) {
-		console.log(`Cell info:`, cellInfo)
+		//console.log(`Cell info:`, cellInfo)
 		const findingValue = cellInfo.original.personId
 		const findInnerHtmLobj = _.find(this.state.data_table, {personId: findingValue})
 		const innerHtmlObj = findInnerHtmLobj[cellInfo.column.id]
@@ -610,7 +610,6 @@ class Active extends React.Component {
 		
 		const SortedList = list_sort.length > 0 ? list_sort : list
 
-
 		let data_display = sortingpanel.length > 0 ? sortingpanel : data_table
 		if(searchpanel.length > 0){
 			data_display = [...searchpanel]
@@ -715,6 +714,7 @@ class Active extends React.Component {
 						filterable={false}
 						showPagination={false}
 						minRows={10}
+						pageSize={data_display.length > 0 ? data_display.length : 10}
 						noDataText='Nothing here'
 						style={{borderRadius:10,marginTop:15}}
 						getTrProps={this.onRowClick} />
