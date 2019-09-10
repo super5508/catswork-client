@@ -121,6 +121,8 @@
   cursor: pointer;
   box-sizing: content-box;
   transition: background-color 0.375s ease, color 0.25s ease;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 .tt_058XsV-bofpXotNaAW:hover {
   color: #333;
@@ -326,6 +328,10 @@
 }
 ._2Kri92gzJRJI940kwdnCfc {
   text-align: center;
+}
+._3XCs8lHXnqeJKEeUvWah_N {
+  display: flex;
+  flex-direction: row;
 }
 
 html {
