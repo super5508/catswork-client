@@ -1,45 +1,47 @@
-import React from 'react'
+import React from 'react';
 
-import state from 'state/state'
+import state from 'state/state';
 
-import User from 'services/User'
+import User from 'services/User';
 
-import Nav from 'components/Nav'
+import Nav from 'components/Nav';
 
-import Heading from 'ui/Heading'
-import Button from 'ui/Button'
+import Heading from 'ui/Heading';
+import Button from 'ui/Button';
 
-import SetUpForm from './SetUpForm'
+import SetUpForm from './SetUpForm';
 
-import s from './setUp.less'
+import s from './setUp.less';
 
 class SetUp extends React.Component {
+  render() {
+    return (
+      <>
+        <Nav>
+          <Button href="/sign-out">Sign out</Button>
+        </Nav>
+        <section className={s.setUp}>
+          <Heading size={1} primary>
+            Welcome
+          </Heading>
+          <Heading size={2}>Looks like it's your first time here</Heading>
+          <p>We need to get a few things out of the way before you can use the app.</p>
+          <p>The following information will help us to improve your experience using CatsWork.</p>
+          <p>
+            If you're unsure for any of these options, just choose what fits best. You'll be able to
+            change this information at any point.
+          </p>
+          <SetUpForm onSetUp={this._onSetUp} />
+        </section>
+      </>
+    );
+  }
 
-	render() {
-		return (
-			<>
-				<Nav>
-					<Button href='/sign-out'>Sign out</Button>
-				</Nav>
-				<section className={s.setUp}>
-					<Heading size={1} primary>Welcome</Heading>
-					<Heading size={2}>Looks like it's your first time here</Heading>
-					<p>We need to get a few things out of the way before you can use the app.</p>
-					<p>The following information will help us to improve your experience using CatsWork.</p>
-					<p>If you're unsure for any of these options, just choose what fits best. You'll be able to change this information at any point.</p>
-					<SetUpForm onSetUp={this._onSetUp} />
-				</section>
-			</>
-		)
-	}
-
-	_onSetUp = (desiredIndustry, graduationMonth, graduationYear, degree, major) => {
-		User.setUp(desiredIndustry, graduationMonth, graduationYear, degree, major)
-			.then(() => {
-				state.reload()
-			})
-	}
-
+  _onSetUp = (desiredIndustry, graduationMonth, graduationYear, degree, major) => {
+    User.setUp(desiredIndustry, graduationMonth, graduationYear, degree, major).then(() => {
+      state.reload();
+    });
+  };
 }
 
-export default SetUp
+export default SetUp;
