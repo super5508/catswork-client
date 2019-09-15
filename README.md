@@ -23,9 +23,9 @@ This will make a production build
 <strong> Note: </strong>: Prefer making build on the client and then take a pull from the server 
 
 
-## Making it in the production mode. 
+## Making it run in the production
 
-Go to the compute instance, select backend-test instance from the list. 
+Go to the compute instance, select ``` backend-test ``` instance from the list. 
 
 Do `ls` to list all the folder in the directory. 
 
